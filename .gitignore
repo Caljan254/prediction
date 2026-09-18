@@ -1,0 +1,14 @@
+# Local configuration overrides
+api/config.local.php
+
+# Tool / Editor directories
+.qodo/
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Log files
+*.log

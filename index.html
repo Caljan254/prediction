@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CALJAN - Football Prediction Intelligence</title>
+  <meta name="description" content="CALJAN: AI-powered football predictions, real Betika daily games, automated result verification, and analyst accuracy tracker.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+
+  <!-- ========================================================
+       LOGIN OVERLAY SCREEN
+       ======================================================== -->
+  <div id="loginOverlay" class="login-overlay active">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="caljan-logo-badge">
+          <span class="caljan-logo-text">CJ</span>
+        </div>
+        <h1 class="caljan-title">CALJAN</h1>
+        <p class="tagline">Football Prediction Intelligence System</p>
+        <div class="powered-tag"><i class="fa-solid fa-bolt"></i> AI-Powered &bull; Real Betika Games &bull; Daily Picks</div>
+      </div>
+
+      <div class="login-alert info">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>Admin Access — Manage Predictions &amp; Track Results</span>
+      </div>
+
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label for="usernameInput"><i class="fa-solid fa-user"></i> Username</label>
+          <input type="text" id="usernameInput" placeholder="Enter username" autocomplete="username" required>
+        </div>
+
+        <div class="form-group">
+          <label for="passwordInput"><i class="fa-solid fa-lock"></i> Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="passwordInput" placeholder="Enter password" autocomplete="current-password" required>
+            <button type="button" id="togglePasswordBtn" class="toggle-pwd-btn" aria-label="Toggle password visibility">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="loginError" class="login-error hidden">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span id="loginErrorMsg">Invalid username or password.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          <span>Sign In to CALJAN</span>
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        </button>
+
+        <div class="credentials-hint">
+          <span>Demo Credentials:</span>
+          <code>caljan</code> / <code>Caljan@2024</code>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MAIN APP CONTAINER
+       ======================================================== -->
+  <div id="appContainer" class="app-container hidden">
+
+    <!-- Top Header -->
+    <header class="hub-header">
+      <div class="header-left">
+        <div class="hub-logo">
+          <div class="logo-cj-badge">CJ</div>
+          <div class="logo-text-group">
+            <span class="logo-title">CALJAN <span class="accent-text">PREDICTIONS</span></span>
+            <span class="logo-sub">Real Betika Games &bull; AI Picks &bull; Live Verification</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="header-pill connection-status" id="headerConnectionPill">
+          <span class="pulse-dot"></span>
+          <span id="headerConnectionText">Checking API...</span>
+        </div>
+        <div class="header-pill auto-timer" title="Auto-checks matches every 5 minutes">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>Auto-Check: <strong id="timerCountdown">5:00</strong></span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button id="syncBetikaBtn" class="btn btn-primary btn-sm" title="Sync Real Daily Matches from Betika Feed">
+          <i class="fa-solid fa-cloud-arrow-down"></i>
+          <span>Sync Today's Games</span>
+        </button>
+        <button id="quickCheckBtn" class="btn btn-success btn-sm pulse-btn" title="Check Live Results Now">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span>Check Results</span>
+        </button>
+        <div class="user-profile">
+          <span class="avatar"><i class="fa-solid fa-user-gear"></i></span>
+          <span class="username" id="loggedUserDisplay">caljan</span>
+        </div>
+        <button id="logoutBtn" class="btn btn-outline btn-sm logout-btn" title="Sign Out">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="hub-nav">
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="tab-games">
+          <i class="fa-solid fa-calendar-day"></i>
+          <span>Today's Games</span>
+          <span class="badge" id="gamesCountBadge">0</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-sources">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>Prediction Sources</span>
+          <span class="badge badge-neutral" id="sourcesCountBadge">0</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-ticket">
+          <i class="fa-solid fa-receipt"></i>
+          <span>Ticket Builder</span>
+          <span class="badge badge-ticket" id="ticketLegsBadge">0</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-dashboard">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Results Tracker</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-settings">
+          <i class="fa-solid fa-sliders"></i>
+          <span>API &amp; Data</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- DISCLAIMER BANNER -->
+    <section class="disclaimer-banner">
+      <div class="disclaimer-icon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <div class="disclaimer-text">
+        <strong>CALJAN Notice:</strong> Predictions are AI-generated for analysis purposes only. Betting carries risk. Past accuracy does not guarantee future results. Gamble responsibly.
+      </div>
+    </section>
+
+    <!-- MAIN VIEW AREA -->
+    <main class="hub-main">
+
+      <!-- ========================================================
+           VIEW 1: TODAY'S GAMES PAGE
+           ======================================================== -->
+      <section id="tab-games" class="tab-pane active">
+        <div class="pane-header">
+          <div class="title-group">
+            <h2><i class="fa-solid fa-futbol"></i> Today's Fixtures &amp; Predictions</h2>
+            <p class="subtitle" id="todayDateDisplay">Loading today's real Betika matches with CALJAN AI predictions...</p>
+          </div>
+          <div class="pane-actions">
+            <div class="filter-group">
+              <select id="filterStatus" class="form-select">
+                <option value="ALL">All Statuses</option>
+                <option value="Pending">Pending (Not Played)</option>
+                <option value="Live">Live In-Play</option>
+                <option value="Won">Won</option>
+                <option value="Lost">Lost</option>
+              </select>
+              <select id="filterLeague" class="form-select">
+                <option value="ALL">All Leagues</option>
+              </select>
+              <select id="filterSort" class="form-select" title="Order games chronologically or by status">
+                <option value="time-asc">Sort by Time (Earliest First)</option>
+                <option value="time-desc">Sort by Time (Latest First)</option>
+                <option value="live-first">Live Matches First</option>
+                <option value="conf-high">High Confidence First</option>
+              </select>
+            </div>
+            <button id="syncBetikaPaneBtn" class="btn btn-outline" title="Refresh Live Daily Matches from Betika">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Refresh Games</span>
+            </button>
+            <button id="addMatchBtn" class="btn btn-primary">
+              <i class="fa-solid fa-plus"></i>
+              <span>Add Match</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive Date Navigation Bar -->
+        <div class="date-navigation-strip">
+          <div class="date-strip-label">
+            <i class="fa-regular fa-calendar-days"></i>
+            <span>Select Fixture Day:</span>
+          </div>
+          <div class="date-tabs-container" id="dateTabsContainer">
+            <!-- Populated dynamically -->
+          </div>
+          <div class="date-custom-picker">
+            <label for="filterDateCustom"><i class="fa-solid fa-calendar"></i> Pick Date:</label>
+            <input type="date" id="filterDateCustom" class="form-input date-input">
+          </div>
+        </div>
+
+        <!-- Quick Summary Cards -->
+        <div class="games-summary-cards">
+          <div class="summary-card stat-pending">
+            <div class="card-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div class="card-data">
+              <span class="stat-number" id="gamesPendingCount">0</span>
+              <span class="stat-label">Pending (Unplayed)</span>
+            </div>
+          </div>
+          <div class="summary-card stat-live">
+            <div class="card-icon"><span class="live-dot"></span></div>
+            <div class="card-data">
+              <span class="stat-number text-danger" id="gamesLiveCount">0</span>
+              <span class="stat-label">Live In-Play</span>
+            </div>
+          </div>
+          <div class="summary-card stat-won">
+            <div class="card-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="card-data">
+              <span class="stat-number" id="gamesWonCount">0</span>
+              <span class="stat-label">Won Today</span>
+            </div>
+          </div>
+          <div class="summary-card stat-lost">
+            <div class="card-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+            <div class="card-data">
+              <span class="stat-number" id="gamesLostCount">0</span>
+              <span class="stat-label">Lost Today</span>
+            </div>
+          </div>
+          <div class="summary-card stat-hitrate">
+            <div class="card-icon"><i class="fa-solid fa-bullseye"></i></div>
+            <div class="card-data">
+              <span class="stat-number" id="gamesTodayHitRate">0.0%</span>
+              <span class="stat-label">Today's Hit Rate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Matches Table Container -->
+        <div class="table-responsive-wrapper">
+          <table class="hub-table" id="gamesTable">
+            <thead>
+              <tr>
+                <th style="width: 75px;">Time</th>
+                <th>League</th>
+                <th>Home Team</th>
+                <th>Away Team</th>
+                <th>Prediction</th>
+                <th style="width: 110px;">Confidence</th>
+                <th>Sources</th>
+                <th style="width: 75px;">Odds</th>
+                <th style="width: 100px;">Status</th>
+                <th style="width: 90px;">Result</th>
+                <th style="width: 160px; text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="gamesTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+          <div id="gamesEmptyState" class="empty-state hidden">
+            <i class="fa-regular fa-futbol"></i>
+            <h3>No Matches Found</h3>
+            <p>Click "Sync Today's Games" or "Add Match" to get started.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           VIEW 2: PREDICTION SOURCES PANEL
+           ======================================================== -->
+      <section id="tab-sources" class="tab-pane">
+        <div class="pane-header">
+          <div class="title-group">
+            <h2><i class="fa-solid fa-layer-group"></i> Prediction Sources &amp; Consensus Log</h2>
+            <p class="subtitle">Record raw analyst feeds from Forebet, APWin, SportyTrader, OddsPortal, X, Reddit, and custom scouts</p>
+          </div>
+        </div>
+
+        <div class="sources-layout">
+          <!-- Left: New Entry Form -->
+          <div class="card card-form">
+            <div class="card-header">
+              <i class="fa-solid fa-file-pen"></i>
+              <h3>Log New Source Prediction</h3>
+            </div>
+            <form id="sourceEntryForm" class="card-body">
+              <div class="form-group">
+                <label for="srcNameSelect">Source Platform / Analyst *</label>
+                <div class="input-with-select">
+                  <select id="srcNameSelect" class="form-select" required>
+                    <option value="Forebet">Forebet (Statistical AI)</option>
+                    <option value="APWin">APWin (Form &amp; H2H Model)</option>
+                    <option value="SportyTrader">SportyTrader (Expert Analysis)</option>
+                    <option value="OddsPortal">OddsPortal (Sharp Money Tracker)</option>
+                    <option value="X/Twitter Consensus">X / Twitter Sentiment</option>
+                    <option value="Reddit r/SoccerBetting">Reddit Discussions</option>
+                    <option value="CALJAN AI">CALJAN AI Model</option>
+                    <option value="Custom">Other / Custom Analyst...</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group hidden" id="customSourceGroup">
+                <label for="srcCustomName">Custom Source Name</label>
+                <input type="text" id="srcCustomName" placeholder="e.g. VIP Telegram / Pro Analyst">
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col">
+                  <label for="srcMatchSelect">Select Active Match *</label>
+                  <select id="srcMatchSelect" class="form-select" required>
+                    <!-- Populated dynamically -->
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col">
+                  <label for="srcPredictionSelect">Prediction *</label>
+                  <select id="srcPredictionSelect" class="form-select" required>
+                    <option value="Home Win">Home Win (1)</option>
+                    <option value="Draw">Draw (X)</option>
+                    <option value="Away Win">Away Win (2)</option>
+                    <option value="1X">1X (Home or Draw)</option>
+                    <option value="X2">X2 (Draw or Away)</option>
+                    <option value="12">12 (Home or Away)</option>
+                    <option value="Over 2.5">Over 2.5 Goals</option>
+                    <option value="Under 2.5">Under 2.5 Goals</option>
+                    <option value="Over 1.5">Over 1.5 Goals</option>
+                    <option value="Under 1.5">Under 1.5 Goals</option>
+                    <option value="Over 3.5">Over 3.5 Goals</option>
+                    <option value="Under 3.5">Under 3.5 Goals</option>
+                    <option value="BTTS">Both Teams To Score (Yes)</option>
+                    <option value="BTTS No">Both Teams To Score (No)</option>
+                  </select>
+                </div>
+                <div class="form-group col">
+                  <label for="srcConfidenceSelect">Confidence *</label>
+                  <select id="srcConfidenceSelect" class="form-select" required>
+                    <option value="High">High Confidence</option>
+                    <option value="Medium" selected>Medium Confidence</option>
+                    <option value="Low">Low Confidence</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="srcNotes">Analyst Commentary / Rationale (Optional)</label>
+                <textarea id="srcNotes" rows="3" placeholder="Key reasoning, expected goal count, or model probability..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Save Analyst Prediction</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Right: Sources Table -->
+          <div class="card card-table">
+            <div class="card-header space-between">
+              <div class="header-left-title">
+                <i class="fa-solid fa-list-check"></i>
+                <h3>Recorded Source Submissions</h3>
+              </div>
+              <span class="badge" id="sourceCountTag">0 Entries</span>
+            </div>
+            <div class="card-body no-pad">
+              <div class="table-responsive-wrapper">
+                <table class="hub-table" id="sourcesTable">
+                  <thead>
+                    <tr>
+                      <th>Source</th>
+                      <th>Match</th>
+                      <th>Pick</th>
+                      <th>Conf.</th>
+                      <th>Notes</th>
+                      <th>Time</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sourcesTableBody">
+                    <!-- Rendered via JS -->
+                  </tbody>
+                </table>
+              </div>
+              <div id="sourcesEmptyState" class="empty-state hidden">
+                <i class="fa-solid fa-layer-group"></i>
+                <h3>No Sources Logged</h3>
+                <p>Use the form to log predictions from analysts, tipsters, and AI models.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           VIEW 3: TICKET BUILDER
+           ======================================================== -->
+      <section id="tab-ticket" class="tab-pane">
+        <div class="pane-header">
+          <div class="title-group">
+            <h2><i class="fa-solid fa-receipt"></i> Accumulator Ticket Builder</h2>
+            <p class="subtitle">Build multi-leg accumulators from today's CALJAN-predicted matches. Track slip accuracy over time.</p>
+          </div>
+          <div class="pane-actions">
+            <button id="saveTicketBtn" class="btn btn-primary">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Save Ticket</span>
+            </button>
+            <button id="clearSlipBtn" class="btn btn-outline">
+              <i class="fa-solid fa-broom"></i>
+              <span>Clear Slip</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="ticket-layout">
+          <!-- Active Bet Slip -->
+          <div class="card ticket-slip-card">
+            <div class="card-header">
+              <i class="fa-solid fa-note-sticky"></i>
+              <h3>Active Bet Slip</h3>
+              <span class="badge badge-ticket" id="slipLegCount">0 Legs</span>
+            </div>
+            <div class="card-body" id="activeSlipBody">
+              <div class="empty-state" id="slipEmptyState">
+                <i class="fa-regular fa-note-sticky"></i>
+                <h3>Empty Slip</h3>
+                <p>Click the ticket icon on any game to add it to your slip.</p>
+              </div>
+              <div id="slipLegsContainer"></div>
+            </div>
+            <div class="ticket-slip-footer" id="ticketSlipFooter" style="display:none;">
+              <div class="slip-totals">
+                <div class="slip-total-row">
+                  <span>Total Odds:</span>
+                  <strong id="slipTotalOdds">0.00</strong>
+                </div>
+                <div class="slip-total-row">
+                  <span>Stake (KES):</span>
+                  <input type="number" id="slipStakeInput" class="stake-input" placeholder="100" min="1" value="100">
+                </div>
+                <div class="slip-total-row highlight-row">
+                  <span>Potential Win (KES):</span>
+                  <strong id="slipPotentialWin" class="text-accent">0.00</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game Picker -->
+          <div class="card ticket-picker-card">
+            <div class="card-header">
+              <i class="fa-solid fa-plus-circle"></i>
+              <h3>Add Games to Slip</h3>
+            </div>
+            <div class="card-body no-pad">
+              <div id="ticketMatchesList" class="ticket-matches-list">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Saved Tickets -->
+          <div class="card saved-tickets-card" style="grid-column: 1 / -1;">
+            <div class="card-header space-between">
+              <div class="header-left-title">
+                <i class="fa-solid fa-folder-open"></i>
+                <h3>Saved Tickets History</h3>
+              </div>
+              <span class="badge" id="savedTicketsCount">0 Tickets</span>
+            </div>
+            <div class="card-body no-pad">
+              <table class="hub-table" id="savedTicketsTable">
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Date Saved</th>
+                    <th>Legs</th>
+                    <th>Total Odds</th>
+                    <th>Stake (KES)</th>
+                    <th>Potential Win</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="savedTicketsBody">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+              <div id="savedTicketsEmptyState" class="empty-state hidden">
+                <i class="fa-solid fa-folder-open"></i>
+                <h3>No Saved Tickets</h3>
+                <p>Build a slip and click "Save Ticket" to track your accumulators.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           VIEW 4: RESULTS TRACKER / DASHBOARD
+           ======================================================== -->
+      <section id="tab-dashboard" class="tab-pane">
+        <div class="pane-header">
+          <div class="title-group">
+            <h2><i class="fa-solid fa-chart-line"></i> CALJAN Results Tracker &amp; Analytics</h2>
+            <p class="subtitle">Track prediction accuracy, win rates, and performance over time</p>
+          </div>
+          <div class="pane-actions">
+            <button id="refreshChartsBtn" class="btn btn-outline btn-sm">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Refresh Analytics</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card kpi-total">
+            <div class="kpi-icon"><i class="fa-solid fa-futbol"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-num" id="kpiTotal">0</span>
+              <span class="kpi-label">Total Predictions</span>
+            </div>
+          </div>
+          <div class="kpi-card kpi-won">
+            <div class="kpi-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-num" id="kpiWon">0</span>
+              <span class="kpi-label">Correct Predictions</span>
+            </div>
+          </div>
+          <div class="kpi-card kpi-lost">
+            <div class="kpi-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-num" id="kpiLost">0</span>
+              <span class="kpi-label">Incorrect Predictions</span>
+            </div>
+          </div>
+          <div class="kpi-card kpi-rate">
+            <div class="kpi-icon"><i class="fa-solid fa-percent"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-num text-accent" id="kpiRate">0.0%</span>
+              <span class="kpi-label">Overall Hit Rate</span>
+            </div>
+          </div>
+          <div class="kpi-card kpi-streak">
+            <div class="kpi-icon"><i class="fa-solid fa-fire"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-num text-gold" id="kpiStreak">0</span>
+              <span class="kpi-label">Current Win Streak</span>
+            </div>
+          </div>
+          <div class="kpi-card kpi-highconf">
+            <div class="kpi-icon"><i class="fa-solid fa-star"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-num" id="kpiHighConf">0.0%</span>
+              <span class="kpi-label">High Confidence Rate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+          <div class="card chart-card">
+            <div class="card-header">
+              <i class="fa-solid fa-chart-pie"></i>
+              <h3>Prediction Outcomes</h3>
+            </div>
+            <div class="card-body">
+              <canvas id="outcomeChart" height="250"></canvas>
+            </div>
+          </div>
+          <div class="card chart-card">
+            <div class="card-header">
+              <i class="fa-solid fa-chart-bar"></i>
+              <h3>Hit Rate by League</h3>
+            </div>
+            <div class="card-body">
+              <canvas id="leagueChart" height="250"></canvas>
+            </div>
+          </div>
+          <div class="card chart-card" style="grid-column: 1 / -1;">
+            <div class="card-header">
+              <i class="fa-solid fa-chart-line"></i>
+              <h3>Performance Trend (Last 30 Days)</h3>
+            </div>
+            <div class="card-body">
+              <canvas id="trendChart" height="150"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Results Table -->
+        <div class="card" style="margin-top: 16px;">
+          <div class="card-header">
+            <i class="fa-solid fa-history"></i>
+            <h3>Recent Settled Predictions</h3>
+          </div>
+          <div class="card-body no-pad">
+            <table class="hub-table" id="resultsTable">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Match</th>
+                  <th>League</th>
+                  <th>Prediction</th>
+                  <th>Confidence</th>
+                  <th>Odds</th>
+                  <th>Result</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="resultsTableBody">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           VIEW 5: API & DATA SETTINGS
+           ======================================================== -->
+      <section id="tab-settings" class="tab-pane">
+        <div class="pane-header">
+          <div class="title-group">
+            <h2><i class="fa-solid fa-sliders"></i> API Configuration &amp; Data Management</h2>
+            <p class="subtitle">Connect to live score APIs, manage CALJAN data, and configure auto-checking</p>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+
+          <!-- Betika Live Feed Card -->
+          <div class="card">
+            <div class="card-header">
+              <i class="fa-solid fa-rss"></i>
+              <h3>Betika Official Live Feed API</h3>
+            </div>
+            <div class="card-body">
+              <p class="help-text">
+                Pulls real fixtures, start times, and live 1X2 odds directly from Betika's public production API (<code>https://api.betika.com/v1/uo/matches?tab=today</code>).
+              </p>
+              <div class="button-row" style="margin-bottom: 12px;">
+                <button id="syncBetikaApiBtn" class="btn btn-primary">
+                  <i class="fa-solid fa-bolt"></i>
+                  <span>Pull Real Betika Games (Live API)</span>
+                </button>
+                <a href="https://api.betika.com/v1/uo/matches?tab=today&sub_type_id=1,186&sport_id=14&tag_id=1&sort_id=1&period_id=-1&esports=false" target="_blank" class="btn btn-outline" style="text-decoration:none;">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  <span>Open Betika API Feed</span>
+                </a>
+              </div>
+              <div class="form-group">
+                <label for="manualBetikaJsonInput">Paste Raw Betika API JSON (Fallback):</label>
+                <textarea id="manualBetikaJsonInput" rows="3" placeholder='If browser CORS restricts direct calls, open the API link above, copy all JSON and paste here...'></textarea>
+              </div>
+              <div class="button-row">
+                <button id="processBetikaJsonBtn" class="btn btn-ghost btn-sm">
+                  <i class="fa-solid fa-file-import"></i>
+                  <span>Process Pasted JSON</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Apify Live Score Checker Card -->
+          <div class="card">
+            <div class="card-header">
+              <i class="fa-solid fa-satellite-dish"></i>
+              <h3>Apify Live Score Checker</h3>
+            </div>
+            <div class="card-body">
+              <p class="help-text">
+                CALJAN uses the Apify cloud to automatically verify prediction results. Enter your Apify Personal Token below.
+              </p>
+              <div class="form-group">
+                <label for="apifyTokenInput">Apify API Token:</label>
+                <input type="password" id="apifyTokenInput" placeholder="apify_api_XXXXXXXXXXXXXXXX" class="form-input">
+              </div>
+              <div class="button-row">
+                <button id="saveTokenBtn" class="btn btn-primary btn-sm">
+                  <i class="fa-solid fa-floppy-disk"></i>
+                  <span>Save Token</span>
+                </button>
+                <button id="testApiBtn" class="btn btn-outline btn-sm">
+                  <i class="fa-solid fa-satellite-dish"></i>
+                  <span>Test API Connection</span>
+                </button>
+              </div>
+              <div class="api-status-box" id="apiStatusBox">
+                <span class="status-circle" id="settingsStatusCircle"></span>
+                <div>
+                  <strong id="settingsStatusLabel">Status: Not Configured</strong>
+                  <p id="settingsStatusDetail">Enter your Apify API Token and click "Test Connection".</p>
+                </div>
+              </div>
+              <div class="form-group" style="margin-top:12px;">
+                <div class="radio-options">
+                  <label class="radio-label">
+                    <input type="radio" name="apiProvider" value="flashscore" checked>
+                    <span><strong>Flashscore Actor</strong> (<code>khadinakbar/flashscore-live-matches</code>)</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="apiProvider" value="espn">
+                    <span><strong>ESPN Scraper</strong> (<code>crawlerbros/espn-scraper</code>)</span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="toggle-switch-row">
+                  <div>
+                    <strong>5-Minute Automatic Background Polling</strong>
+                    <p class="help-text" style="margin: 0;">Periodically queries API and automatically marks pending matches as Won or Lost.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="autoCheckToggle" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <button id="clearCacheBtn" class="btn btn-ghost btn-xs text-muted">
+                  <i class="fa-solid fa-trash-can"></i> Clear API Response Cache (<code>caljan_api_cache</code>)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Manual Score Parser Card -->
+          <div class="card">
+            <div class="card-header">
+              <i class="fa-solid fa-terminal"></i>
+              <h3>Manual Score Parser &amp; CORS Fallback</h3>
+            </div>
+            <div class="card-body">
+              <p class="help-text">
+                If CORS prevents direct API calls, paste the JSON response from Apify or Flashscore here to auto-check all pending bets:
+              </p>
+              <div class="form-group">
+                <label for="manualJsonInput">Paste Scraper JSON Data:</label>
+                <textarea id="manualJsonInput" rows="5" placeholder='[{"homeTeam": "Arsenal", "awayTeam": "Chelsea", "homeScore": 2, "awayScore": 1, "status": "finished"}, ...]'></textarea>
+              </div>
+              <div class="button-row">
+                <button id="processManualJsonBtn" class="btn btn-success">
+                  <i class="fa-solid fa-gears"></i>
+                  <span>Process Manual JSON</span>
+                </button>
+                <button id="simulateLiveBtn" class="btn btn-outline" title="Simulates real-time in-play live scores for active games">
+                  <i class="fa-solid fa-tower-broadcast text-danger"></i>
+                  <span>Simulate Live Kick-off</span>
+                </button>
+                <button id="simulateAllBtn" class="btn btn-outline" title="Simulates final scores (FT) and marks predictions Won/Lost">
+                  <i class="fa-solid fa-flag-checkered text-success"></i>
+                  <span>Simulate Final Whistle (FT)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- LocalStorage Backup Card -->
+          <div class="card" style="grid-column: 1 / -1;">
+            <div class="card-header space-between">
+              <div class="header-left-title">
+                <i class="fa-solid fa-database"></i>
+                <h3>CALJAN Data Backup &amp; Restore</h3>
+              </div>
+              <div class="storage-meta">
+                <span class="badge" id="storageUsageBadge">Storage: OK</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <p class="help-text">
+                All CALJAN data is stored safely in your browser's <code>localStorage</code> under keys:
+                <code>caljan_session</code>, <code>caljan_predictions</code>, <code>caljan_results</code>, <code>caljan_tickets</code>, <code>caljan_sources</code>, and <code>caljan_api_cache</code>.
+              </p>
+
+              <div class="data-management-actions">
+                <button id="exportDataBtn" class="btn btn-primary">
+                  <i class="fa-solid fa-download"></i>
+                  <span>Export All Data (JSON)</span>
+                </button>
+
+                <label class="btn btn-outline file-upload-label">
+                  <i class="fa-solid fa-upload"></i>
+                  <span>Import Data from JSON</span>
+                  <input type="file" id="importDataInput" accept=".json" class="hidden">
+                </label>
+
+                <button id="seedDataBtn" class="btn btn-ghost">
+                  <i class="fa-solid fa-rotate-left"></i>
+                  <span>Load Fresh Today's Games</span>
+                </button>
+
+                <button id="resetAllDataBtn" class="btn btn-ghost text-danger">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <span>Reset All Local Storage</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- CALJAN Footer -->
+    <footer class="caljan-footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span class="footer-cj">CJ</span>
+          <span><strong>CALJAN</strong> &bull; Football Prediction Intelligence System</span>
+        </div>
+        <div class="footer-links">
+          <span class="footer-note">Real Betika Games &bull; AI-Powered Predictions &bull; Track &amp; Verify</span>
+        </div>
+        <div class="footer-disclaimer">
+          &copy; 2026 CALJAN &mdash; For analytical purposes only. Not financial advice.
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ========================================================
+       MODAL 1: MATCH ANALYSIS MODAL
+       ======================================================== -->
+  <div id="matchAnalysisModal" class="modal-backdrop hidden">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <h3 id="modalMatchTitle">Arsenal vs Chelsea</h3>
+            <span class="modal-subtitle" id="modalMatchMeta">Premier League &bull; Today, 17:30</span>
+          </div>
+          <button class="modal-close-btn" data-close="matchAnalysisModal">&times;</button>
+        </div>
+
+        <div class="modal-tabs">
+          <button class="modal-tab active" data-modaltab="tab-h2h">Head-to-Head (Last 20)</button>
+          <button class="modal-tab" data-modaltab="tab-form">Recent Form (Last 5)</button>
+          <button class="modal-tab" data-modaltab="tab-squad">Squad &amp; Injuries</button>
+          <button class="modal-tab" data-modaltab="tab-travel">Travel &amp; Pitch</button>
+          <button class="modal-tab" data-modaltab="tab-sentiment">Social Sentiment (X/Reddit)</button>
+          <button class="modal-tab" data-modaltab="tab-analysts">All Analyst Picks</button>
+        </div>
+
+        <div class="modal-body">
+          <div id="tab-h2h" class="modal-pane active">
+            <div class="h2h-summary-bar" id="h2hSummaryBar"></div>
+            <div class="h2h-list" id="h2hListContainer"></div>
+          </div>
+          <div id="tab-form" class="modal-pane">
+            <div class="form-comparison-grid" id="formComparisonGrid"></div>
+          </div>
+          <div id="tab-squad" class="modal-pane">
+            <div class="squad-notes-grid" id="squadNotesGrid"></div>
+          </div>
+          <div id="tab-travel" class="modal-pane">
+            <div class="travel-notes-card" id="travelNotesContainer"></div>
+          </div>
+          <div id="tab-sentiment" class="modal-pane">
+            <div class="sentiment-container" id="sentimentContainer"></div>
+          </div>
+          <div id="tab-analysts" class="modal-pane">
+            <div class="analyst-breakdown-list" id="analystBreakdownList"></div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline" data-close="matchAnalysisModal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 2: ADD NEW MATCH MODAL
+       ======================================================== -->
+  <div id="addMatchModal" class="modal-backdrop hidden">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Add Football Fixture &amp; Prediction</h3>
+          <button class="modal-close-btn" data-close="addMatchModal">&times;</button>
+        </div>
+        <form id="newMatchForm">
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="newMatchTime">Kick-off Time *</label>
+                <input type="text" id="newMatchTime" placeholder="e.g. 19:45" required>
+              </div>
+              <div class="form-group col">
+                <label for="newMatchDate">Date *</label>
+                <input type="date" id="newMatchDate" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="newMatchLeague">League *</label>
+                <input type="text" id="newMatchLeague" placeholder="e.g. Premier League" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="newHomeTeam">Home Team *</label>
+                <input type="text" id="newHomeTeam" placeholder="e.g. Liverpool" required>
+              </div>
+              <div class="form-group col">
+                <label for="newAwayTeam">Away Team *</label>
+                <input type="text" id="newAwayTeam" placeholder="e.g. Man City" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="newPrediction">Prediction *</label>
+                <select id="newPrediction" class="form-select" required>
+                  <option value="Home Win">Home Win (1)</option>
+                  <option value="Draw">Draw (X)</option>
+                  <option value="Away Win">Away Win (2)</option>
+                  <option value="1X">1X (Home or Draw)</option>
+                  <option value="X2">X2 (Draw or Away)</option>
+                  <option value="Over 2.5">Over 2.5 Goals</option>
+                  <option value="Under 2.5">Under 2.5 Goals</option>
+                  <option value="Over 1.5">Over 1.5 Goals</option>
+                  <option value="BTTS">Both Teams To Score (BTTS)</option>
+                  <option value="BTTS No">Both Teams To Score - No</option>
+                </select>
+              </div>
+              <div class="form-group col">
+                <label for="newConfidence">Confidence *</label>
+                <select id="newConfidence" class="form-select" required>
+                  <option value="High">High</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="newSources">Sources / Analysts</label>
+                <input type="text" id="newSources" placeholder="e.g. Forebet, APWin, CALJAN AI">
+              </div>
+              <div class="form-group col">
+                <label for="newOdds">Betika Odds *</label>
+                <input type="number" id="newOdds" step="0.01" min="1.01" placeholder="e.g. 1.85" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" data-close="addMatchModal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Fixture</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- MAIN SCRIPT -->
+  <script src="caljan.js"></script>
+</body>
+</html>

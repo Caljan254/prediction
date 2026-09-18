@@ -1,0 +1,3182 @@
+[
+  {
+    "id": "betika-18918",
+    "betikaGameId": "18918",
+    "matchId": "11072164",
+    "time": "22:00",
+    "date": "2026-09-14",
+    "league": "Premier League",
+    "homeTeam": "Leeds",
+    "awayTeam": "Newcastle",
+    "prediction": "1X",
+    "confidence": "Medium",
+    "sources": "APWin, Reddit r/SoccerBetting",
+    "odds": 1.35,
+    "status": "Won",
+    "result": "2-0",
+    "checkedAt": "17:50",
+    "betikaOdds": {
+      "home": 2.31,
+      "draw": 3.6,
+      "away": 3.1
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Leeds",
+          "away": "Newcastle",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Newcastle",
+          "away": "Leeds",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Leeds",
+          "away": "Newcastle",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Premier League). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 32,
+        "drawPct": 21,
+        "awayPct": 47,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing 1X at odds of 1.35."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Leeds vs Newcastle is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "1X",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 74% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "1X",
+          "conf": "Medium",
+          "note": "High value rating for Premier League round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "1X",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-49604",
+    "betikaGameId": "49604",
+    "matchId": "11531878",
+    "time": "22:00",
+    "date": "2026-09-14",
+    "league": "LaLiga",
+    "homeTeam": "Villarreal",
+    "awayTeam": "Betis",
+    "prediction": "1X",
+    "confidence": "Medium",
+    "sources": "APWin, Reddit r/SoccerBetting",
+    "odds": 1.35,
+    "status": "Won",
+    "result": "3-1",
+    "checkedAt": "18:40",
+    "betikaOdds": {
+      "home": 2.01,
+      "draw": 3.95,
+      "away": 3.6
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Villarreal",
+          "away": "Betis",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Betis",
+          "away": "Villarreal",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Villarreal",
+          "away": "Betis",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (LaLiga). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 37,
+        "drawPct": 19,
+        "awayPct": 44,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing 1X at odds of 1.35."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Villarreal vs Betis is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "1X",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 74% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "1X",
+          "conf": "Medium",
+          "note": "High value rating for LaLiga round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "1X",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-87449",
+    "betikaGameId": "87449",
+    "matchId": "10999615",
+    "time": "19:30",
+    "date": "2026-09-14",
+    "league": "Serie A",
+    "homeTeam": "Torino FC",
+    "awayTeam": "AS Roma",
+    "prediction": "Away Win",
+    "confidence": "High",
+    "sources": "Forebet, SportyTrader, OddsPortal",
+    "odds": 1.54,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 6.2,
+      "draw": 4.6,
+      "away": 1.54
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Torino FC",
+          "away": "AS Roma",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "AS Roma",
+          "away": "Torino FC",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Torino FC",
+          "away": "AS Roma",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Serie A). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 15,
+        "drawPct": 16,
+        "awayPct": 69,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Away Win at odds of 1.54."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Torino FC vs AS Roma is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Away Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 65% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Away Win",
+          "conf": "High",
+          "note": "High value rating for Serie A round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Away Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-39199",
+    "betikaGameId": "39199",
+    "matchId": "10999632",
+    "time": "19:30",
+    "date": "2026-09-14",
+    "league": "Serie A",
+    "homeTeam": "Como",
+    "awayTeam": "Parma",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.23,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.23,
+      "draw": 7,
+      "away": 14
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Como",
+          "away": "Parma",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Parma",
+          "away": "Como",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Como",
+          "away": "Parma",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Serie A). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 61,
+        "drawPct": 11,
+        "awayPct": 28,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.23."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Como vs Parma is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 81% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for Serie A round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-55386",
+    "betikaGameId": "55386",
+    "matchId": "10999625",
+    "time": "21:45",
+    "date": "2026-09-14",
+    "league": "Serie A",
+    "homeTeam": "Inter Milan",
+    "awayTeam": "Udinese",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.21,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.21,
+      "draw": 7.6,
+      "away": 14
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Inter Milan",
+          "away": "Udinese",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Udinese",
+          "away": "Inter Milan",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Inter Milan",
+          "away": "Udinese",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Serie A). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 62,
+        "drawPct": 10,
+        "awayPct": 28,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.21."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Inter Milan vs Udinese is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 83% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for Serie A round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-34452",
+    "betikaGameId": "34452",
+    "matchId": "11120212",
+    "time": "18:00",
+    "date": "2026-09-14",
+    "league": "Premier League",
+    "homeTeam": "FC Shakhtar Donetsk",
+    "awayTeam": "Chernomorets Odessa",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.12,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.12,
+      "draw": 8.2,
+      "away": 18
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "FC Shakhtar Donetsk",
+          "away": "Chernomorets Odessa",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Chernomorets Odessa",
+          "away": "FC Shakhtar Donetsk",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "FC Shakhtar Donetsk",
+          "away": "Chernomorets Odessa",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Premier League). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 67,
+        "drawPct": 10,
+        "awayPct": 23,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.12."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "FC Shakhtar Donetsk vs Chernomorets Odessa is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 89% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for Premier League round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-26785",
+    "betikaGameId": "26785",
+    "matchId": "10942991",
+    "time": "20:00",
+    "date": "2026-09-14",
+    "league": "Eliteserien",
+    "homeTeam": "Bodoe/Glimt",
+    "awayTeam": "Sandefjord Fotball",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.15,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.15,
+      "draw": 9.4,
+      "away": 15
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Bodoe/Glimt",
+          "away": "Sandefjord Fotball",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Sandefjord Fotball",
+          "away": "Bodoe/Glimt",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Bodoe/Glimt",
+          "away": "Sandefjord Fotball",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Eliteserien). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 65,
+        "drawPct": 10,
+        "awayPct": 25,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.15."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Bodoe/Glimt vs Sandefjord Fotball is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 87% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for Eliteserien round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-67270",
+    "betikaGameId": "67270",
+    "matchId": "10992702",
+    "time": "20:00",
+    "date": "2026-09-14",
+    "league": "Superliga",
+    "homeTeam": "FC Midtjylland",
+    "awayTeam": "Broendby IF",
+    "prediction": "Home Win",
+    "confidence": "Medium",
+    "sources": "Forebet, APWin",
+    "odds": 1.78,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.78,
+      "draw": 4,
+      "away": 4.2
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "FC Midtjylland",
+          "away": "Broendby IF",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Broendby IF",
+          "away": "FC Midtjylland",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "FC Midtjylland",
+          "away": "Broendby IF",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Superliga). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 42,
+        "drawPct": 19,
+        "awayPct": 39,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.78."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "FC Midtjylland vs Broendby IF is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 56% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "High value rating for Superliga round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-41217",
+    "betikaGameId": "41217",
+    "matchId": "11183465",
+    "time": "20:00",
+    "date": "2026-09-14",
+    "league": "Super Lig",
+    "homeTeam": "Gaziantep",
+    "awayTeam": "Fenerbahce",
+    "prediction": "Away Win",
+    "confidence": "High",
+    "sources": "Forebet, SportyTrader, OddsPortal",
+    "odds": 1.53,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 6,
+      "draw": 4.5,
+      "away": 1.53
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Gaziantep",
+          "away": "Fenerbahce",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Fenerbahce",
+          "away": "Gaziantep",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Gaziantep",
+          "away": "Fenerbahce",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Super Lig). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 15,
+        "drawPct": 17,
+        "awayPct": 68,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Away Win at odds of 1.53."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Gaziantep vs Fenerbahce is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Away Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 65% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Away Win",
+          "conf": "High",
+          "note": "High value rating for Super Lig round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Away Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-46900",
+    "betikaGameId": "46900",
+    "matchId": "11588463",
+    "time": "22:45",
+    "date": "2026-09-14",
+    "league": "Liga Portugal",
+    "homeTeam": "Braga",
+    "awayTeam": "Estoril",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.39,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.39,
+      "draw": 5,
+      "away": 8.2
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Braga",
+          "away": "Estoril",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Estoril",
+          "away": "Braga",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Braga",
+          "away": "Estoril",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Liga Portugal). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 54,
+        "drawPct": 15,
+        "awayPct": 31,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.39."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Braga vs Estoril is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 72% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for Liga Portugal round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-40817",
+    "betikaGameId": "40817",
+    "matchId": "11525459",
+    "time": "16:00",
+    "date": "2026-09-14",
+    "league": "Super League 2",
+    "homeTeam": "Panionios",
+    "awayTeam": "Apollon Kalamarias",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.33,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.33,
+      "draw": 4.4,
+      "away": 9.2
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Panionios",
+          "away": "Apollon Kalamarias",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Apollon Kalamarias",
+          "away": "Panionios",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Panionios",
+          "away": "Apollon Kalamarias",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Super League 2). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 56,
+        "drawPct": 17,
+        "awayPct": 27,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.33."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Panionios vs Apollon Kalamarias is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 75% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for Super League 2 round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-99248",
+    "betikaGameId": "99248",
+    "matchId": "11630292",
+    "time": "16:45",
+    "date": "2026-09-14",
+    "league": "AFC Champions League Elite",
+    "homeTeam": "FK Neftchi Fargona",
+    "awayTeam": "Air Force Club",
+    "prediction": "Home Win",
+    "confidence": "Medium",
+    "sources": "Forebet, APWin",
+    "odds": 1.56,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.56,
+      "draw": 4,
+      "away": 5.8
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "FK Neftchi Fargona",
+          "away": "Air Force Club",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Air Force Club",
+          "away": "FK Neftchi Fargona",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "FK Neftchi Fargona",
+          "away": "Air Force Club",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (AFC Champions League Elite). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 48,
+        "drawPct": 19,
+        "awayPct": 33,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.56."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "FK Neftchi Fargona vs Air Force Club is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 64% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "High value rating for AFC Champions League Elite round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-97969",
+    "betikaGameId": "97969",
+    "matchId": "11632969",
+    "time": "17:00",
+    "date": "2026-09-14",
+    "league": "1. MFL",
+    "homeTeam": "KF Shkendija Haracine",
+    "awayTeam": "FK Skopje",
+    "prediction": "Home Win",
+    "confidence": "Medium",
+    "sources": "Forebet, APWin",
+    "odds": 1.62,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.62,
+      "draw": 3.6,
+      "away": 5.2
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "KF Shkendija Haracine",
+          "away": "FK Skopje",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "FK Skopje",
+          "away": "KF Shkendija Haracine",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "KF Shkendija Haracine",
+          "away": "FK Skopje",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (1. MFL). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 46,
+        "drawPct": 21,
+        "awayPct": 33,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.62."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "KF Shkendija Haracine vs FK Skopje is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 62% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "High value rating for 1. MFL round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-57147",
+    "betikaGameId": "57147",
+    "matchId": "11586867",
+    "time": "20:00",
+    "date": "2026-09-14",
+    "league": "Allsvenskan",
+    "homeTeam": "Djurgardens IF",
+    "awayTeam": "GAIS",
+    "prediction": "Home Win",
+    "confidence": "Medium",
+    "sources": "Forebet, APWin",
+    "odds": 1.48,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.48,
+      "draw": 4.6,
+      "away": 6
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Djurgardens IF",
+          "away": "GAIS",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "GAIS",
+          "away": "Djurgardens IF",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Djurgardens IF",
+          "away": "GAIS",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Allsvenskan). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 51,
+        "drawPct": 16,
+        "awayPct": 33,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.48."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Djurgardens IF vs GAIS is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 68% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "High value rating for Allsvenskan round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-05261",
+    "betikaGameId": "05261",
+    "matchId": "11586876",
+    "time": "20:00",
+    "date": "2026-09-14",
+    "league": "Allsvenskan",
+    "homeTeam": "IK Sirius",
+    "awayTeam": "Degerfors",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.45,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.45,
+      "draw": 4.7,
+      "away": 6.4
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "IK Sirius",
+          "away": "Degerfors",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Degerfors",
+          "away": "IK Sirius",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "IK Sirius",
+          "away": "Degerfors",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Allsvenskan). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 52,
+        "drawPct": 16,
+        "awayPct": 32,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.45."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "IK Sirius vs Degerfors is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 69% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for Allsvenskan round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-72645",
+    "betikaGameId": "72645",
+    "matchId": "11072824",
+    "time": "19:30",
+    "date": "2026-09-14",
+    "league": "Premier League",
+    "homeTeam": "Hapoel Ramat Gan Givatayim FC",
+    "awayTeam": "Maccabi Netanya FC",
+    "prediction": "Away Win",
+    "confidence": "Medium",
+    "sources": "SportyTrader, OddsPortal",
+    "odds": 1.6,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 4.8,
+      "draw": 4.2,
+      "away": 1.6
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Hapoel Ramat Gan Givatayim FC",
+          "away": "Maccabi Netanya FC",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Maccabi Netanya FC",
+          "away": "Hapoel Ramat Gan Givatayim FC",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Hapoel Ramat Gan Givatayim FC",
+          "away": "Maccabi Netanya FC",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Premier League). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 16,
+        "drawPct": 18,
+        "awayPct": 66,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Away Win at odds of 1.60."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Hapoel Ramat Gan Givatayim FC vs Maccabi Netanya FC is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Away Win",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 63% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Away Win",
+          "conf": "Medium",
+          "note": "High value rating for Premier League round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Away Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-33560",
+    "betikaGameId": "33560",
+    "matchId": "11537673",
+    "time": "18:00",
+    "date": "2026-09-14",
+    "league": "Premier League",
+    "homeTeam": "Safa",
+    "awayTeam": "Sabah Masazir",
+    "prediction": "Away Win",
+    "confidence": "High",
+    "sources": "Forebet, SportyTrader, OddsPortal",
+    "odds": 1.38,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 6.4,
+      "draw": 4.8,
+      "away": 1.38
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Safa",
+          "away": "Sabah Masazir",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Sabah Masazir",
+          "away": "Safa",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Safa",
+          "away": "Sabah Masazir",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Premier League). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 15,
+        "drawPct": 16,
+        "awayPct": 69,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Away Win at odds of 1.38."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Safa vs Sabah Masazir is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Away Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 72% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Away Win",
+          "conf": "High",
+          "note": "High value rating for Premier League round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Away Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-26399",
+    "betikaGameId": "26399",
+    "matchId": "11603907",
+    "time": "19:00",
+    "date": "2026-09-14",
+    "league": "1 Lyga",
+    "homeTeam": "FA Siauliai B",
+    "awayTeam": "Be1 Nfa",
+    "prediction": "Away Win",
+    "confidence": "High",
+    "sources": "Forebet, SportyTrader, OddsPortal",
+    "odds": 1.55,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 5,
+      "draw": 4,
+      "away": 1.55
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "FA Siauliai B",
+          "away": "Be1 Nfa",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Be1 Nfa",
+          "away": "FA Siauliai B",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "FA Siauliai B",
+          "away": "Be1 Nfa",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (1 Lyga). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 15,
+        "drawPct": 19,
+        "awayPct": 66,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Away Win at odds of 1.55."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "FA Siauliai B vs Be1 Nfa is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Away Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 65% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Away Win",
+          "conf": "High",
+          "note": "High value rating for 1 Lyga round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Away Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-45626",
+    "betikaGameId": "45626",
+    "matchId": "11630305",
+    "time": "19:00",
+    "date": "2026-09-14",
+    "league": "AFC Champions League Elite",
+    "homeTeam": "Shabab Al Ahli Dubai",
+    "awayTeam": "Tractor Sport Club",
+    "prediction": "Home Win",
+    "confidence": "Medium",
+    "sources": "Forebet, APWin",
+    "odds": 1.83,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.83,
+      "draw": 3.45,
+      "away": 4.5
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Shabab Al Ahli Dubai",
+          "away": "Tractor Sport Club",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Tractor Sport Club",
+          "away": "Shabab Al Ahli Dubai",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Shabab Al Ahli Dubai",
+          "away": "Tractor Sport Club",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (AFC Champions League Elite). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 41,
+        "drawPct": 22,
+        "awayPct": 37,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.83."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Shabab Al Ahli Dubai vs Tractor Sport Club is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 55% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "High value rating for AFC Champions League Elite round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-38754",
+    "betikaGameId": "38754",
+    "matchId": "11630650",
+    "time": "19:00",
+    "date": "2026-09-14",
+    "league": "AFC Champions League Elite",
+    "homeTeam": "Al-Shamal",
+    "awayTeam": "Al-Ittihad FC",
+    "prediction": "Away Win",
+    "confidence": "Medium",
+    "sources": "SportyTrader, OddsPortal",
+    "odds": 1.81,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 4.1,
+      "draw": 3.85,
+      "away": 1.81
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Al-Shamal",
+          "away": "Al-Ittihad FC",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Al-Ittihad FC",
+          "away": "Al-Shamal",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Al-Shamal",
+          "away": "Al-Ittihad FC",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (AFC Champions League Elite). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 18,
+        "drawPct": 19,
+        "awayPct": 63,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Away Win at odds of 1.81."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Al-Shamal vs Al-Ittihad FC is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Away Win",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 55% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Away Win",
+          "conf": "Medium",
+          "note": "High value rating for AFC Champions League Elite round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Away Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-60820",
+    "betikaGameId": "60820",
+    "matchId": "11630673",
+    "time": "19:00",
+    "date": "2026-09-14",
+    "league": "First Division",
+    "homeTeam": "Qalali Club",
+    "awayTeam": "Um Alhassam",
+    "prediction": "Away Win",
+    "confidence": "High",
+    "sources": "Forebet, SportyTrader, OddsPortal",
+    "odds": 1.22,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 9.4,
+      "draw": 5.6,
+      "away": 1.22
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Qalali Club",
+          "away": "Um Alhassam",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Um Alhassam",
+          "away": "Qalali Club",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Qalali Club",
+          "away": "Um Alhassam",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (First Division). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 15,
+        "drawPct": 13,
+        "awayPct": 72,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Away Win at odds of 1.22."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Qalali Club vs Um Alhassam is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Away Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 82% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Away Win",
+          "conf": "High",
+          "note": "High value rating for First Division round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Away Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-80819",
+    "betikaGameId": "80819",
+    "matchId": "11631224",
+    "time": "19:05",
+    "date": "2026-09-14",
+    "league": "Division 1",
+    "homeTeam": "AL Ula",
+    "awayTeam": "Jeddah Club",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.14,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.14,
+      "draw": 6.8,
+      "away": 14
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "AL Ula",
+          "away": "Jeddah Club",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Jeddah Club",
+          "away": "AL Ula",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "AL Ula",
+          "away": "Jeddah Club",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Division 1). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 66,
+        "drawPct": 11,
+        "awayPct": 23,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.14."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "AL Ula vs Jeddah Club is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 88% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for Division 1 round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-63994",
+    "betikaGameId": "63994",
+    "matchId": "11186574",
+    "time": "20:00",
+    "date": "2026-09-14",
+    "league": "1. Lig",
+    "homeTeam": "Kayserispor",
+    "awayTeam": "Istanbulspor",
+    "prediction": "Home Win",
+    "confidence": "Medium",
+    "sources": "Forebet, APWin",
+    "odds": 1.46,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.46,
+      "draw": 4.4,
+      "away": 6.4
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Kayserispor",
+          "away": "Istanbulspor",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Istanbulspor",
+          "away": "Kayserispor",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Kayserispor",
+          "away": "Istanbulspor",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (1. Lig). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 51,
+        "drawPct": 17,
+        "awayPct": 32,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.46."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Kayserispor vs Istanbulspor is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 68% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "High value rating for 1. Lig round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-60878",
+    "betikaGameId": "60878",
+    "matchId": "11631428",
+    "time": "20:00",
+    "date": "2026-09-14",
+    "league": "Erovnuli Liga",
+    "homeTeam": "FC Dinamo Tbilisi",
+    "awayTeam": "FC Gagra",
+    "prediction": "Home Win",
+    "confidence": "Medium",
+    "sources": "Forebet, APWin",
+    "odds": 1.63,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.63,
+      "draw": 3.65,
+      "away": 4.9
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "FC Dinamo Tbilisi",
+          "away": "FC Gagra",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "FC Gagra",
+          "away": "FC Dinamo Tbilisi",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "FC Dinamo Tbilisi",
+          "away": "FC Gagra",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Erovnuli Liga). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 46,
+        "drawPct": 21,
+        "awayPct": 33,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.63."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "FC Dinamo Tbilisi vs FC Gagra is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 61% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "High value rating for Erovnuli Liga round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-64197",
+    "betikaGameId": "64197",
+    "matchId": "11072818",
+    "time": "20:30",
+    "date": "2026-09-14",
+    "league": "Premier League",
+    "homeTeam": "Maccabi Tel Aviv FC",
+    "awayTeam": "Hapoel Tel Aviv FC",
+    "prediction": "1X",
+    "confidence": "Medium",
+    "sources": "APWin, Reddit r/SoccerBetting",
+    "odds": 1.35,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 2.13,
+      "draw": 3.65,
+      "away": 3.05
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Maccabi Tel Aviv FC",
+          "away": "Hapoel Tel Aviv FC",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Hapoel Tel Aviv FC",
+          "away": "Maccabi Tel Aviv FC",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Maccabi Tel Aviv FC",
+          "away": "Hapoel Tel Aviv FC",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Premier League). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 35,
+        "drawPct": 21,
+        "awayPct": 44,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing 1X at odds of 1.35."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Maccabi Tel Aviv FC vs Hapoel Tel Aviv FC is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "1X",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 74% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "1X",
+          "conf": "Medium",
+          "note": "High value rating for Premier League round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "1X",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-23214",
+    "betikaGameId": "23214",
+    "matchId": "11015410",
+    "time": "20:30",
+    "date": "2026-09-14",
+    "league": "Parva Liga",
+    "homeTeam": "Ludogorets 1945",
+    "awayTeam": "FK Septemvri Sofia",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.2,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.2,
+      "draw": 6.4,
+      "away": 12
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Ludogorets 1945",
+          "away": "FK Septemvri Sofia",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "FK Septemvri Sofia",
+          "away": "Ludogorets 1945",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Ludogorets 1945",
+          "away": "FK Septemvri Sofia",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Parva Liga). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 63,
+        "drawPct": 12,
+        "awayPct": 25,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.20."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Ludogorets 1945 vs FK Septemvri Sofia is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 83% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for Parva Liga round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-04499",
+    "betikaGameId": "04499",
+    "matchId": "11115042",
+    "time": "21:00",
+    "date": "2026-09-14",
+    "league": "Superliga",
+    "homeTeam": "Fotbal Club FCSB",
+    "awayTeam": "FC Petrolul Ploiesti",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.4,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.4,
+      "draw": 4.8,
+      "away": 7.2
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Fotbal Club FCSB",
+          "away": "FC Petrolul Ploiesti",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "FC Petrolul Ploiesti",
+          "away": "Fotbal Club FCSB",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Fotbal Club FCSB",
+          "away": "FC Petrolul Ploiesti",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (Superliga). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 54,
+        "drawPct": 16,
+        "awayPct": 30,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.40."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Fotbal Club FCSB vs FC Petrolul Ploiesti is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 71% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for Superliga round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-14692",
+    "betikaGameId": "14692",
+    "matchId": "11630223",
+    "time": "21:15",
+    "date": "2026-09-14",
+    "league": "AFC Champions League Elite",
+    "homeTeam": "Esteghlal",
+    "awayTeam": "Al Sadd SC",
+    "prediction": "Over 2.5",
+    "confidence": "Medium",
+    "sources": "Forebet, X/Twitter Consensus",
+    "odds": 1.8,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 3.85,
+      "draw": 3.35,
+      "away": 1.99
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Esteghlal",
+          "away": "Al Sadd SC",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Al Sadd SC",
+          "away": "Esteghlal",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Esteghlal",
+          "away": "Al Sadd SC",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (AFC Champions League Elite). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 19,
+        "drawPct": 22,
+        "awayPct": 59,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Over 2.5 at odds of 1.80."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Esteghlal vs Al Sadd SC is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Over 2.5",
+          "conf": "Medium",
+          "note": "Algorithmic model estimates 56% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Over 2.5",
+          "conf": "Medium",
+          "note": "High value rating for AFC Champions League Elite round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Over 2.5",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-76503",
+    "betikaGameId": "76503",
+    "matchId": "11630537",
+    "time": "21:15",
+    "date": "2026-09-14",
+    "league": "AFC Champions League Elite",
+    "homeTeam": "Al-Ahli Saudi FC",
+    "awayTeam": "Pakhtakor",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.2,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.2,
+      "draw": 7,
+      "away": 12
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Al-Ahli Saudi FC",
+          "away": "Pakhtakor",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Pakhtakor",
+          "away": "Al-Ahli Saudi FC",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Al-Ahli Saudi FC",
+          "away": "Pakhtakor",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (AFC Champions League Elite). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 63,
+        "drawPct": 11,
+        "awayPct": 26,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.20."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Al-Ahli Saudi FC vs Pakhtakor is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 83% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for AFC Champions League Elite round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "betika-72214",
+    "betikaGameId": "72214",
+    "matchId": "11631210",
+    "time": "21:15",
+    "date": "2026-09-14",
+    "league": "AFC Champions League Elite",
+    "homeTeam": "Al Qadsiah",
+    "awayTeam": "Al-Wasl FC",
+    "prediction": "Home Win",
+    "confidence": "High",
+    "sources": "Forebet, APWin, Sharp Money Consensus",
+    "odds": 1.38,
+    "status": "Pending",
+    "result": null,
+    "checkedAt": null,
+    "betikaOdds": {
+      "home": 1.38,
+      "draw": 5.2,
+      "away": 7
+    },
+    "analysis": {
+      "h2hSummary": {
+        "homeWins": 8,
+        "draws": 4,
+        "awayWins": 6,
+        "total": 18
+      },
+      "h2hList": [
+        {
+          "date": "2025-11-20",
+          "home": "Al Qadsiah",
+          "away": "Al-Wasl FC",
+          "score": "2-1"
+        },
+        {
+          "date": "2025-05-12",
+          "home": "Al-Wasl FC",
+          "away": "Al Qadsiah",
+          "score": "1-1"
+        },
+        {
+          "date": "2024-10-04",
+          "home": "Al Qadsiah",
+          "away": "Al-Wasl FC",
+          "score": "1-0"
+        }
+      ],
+      "homeForm": [
+        "W",
+        "W",
+        "D",
+        "W",
+        "L"
+      ],
+      "awayForm": [
+        "W",
+        "D",
+        "L",
+        "W",
+        "D"
+      ],
+      "homeSquadOut": [
+        "Squad fully cleared by medical staff for kickoff."
+      ],
+      "awaySquadOut": [
+        "Standard tactical rotation applied by manager."
+      ],
+      "travel": "Featured match on Betika Daily Fixture Board (AFC Champions League Elite). Normal travel rest for both squads.",
+      "sentiment": {
+        "homePct": 54,
+        "drawPct": 14,
+        "awayPct": 32,
+        "quotes": [
+          {
+            "source": "Betika Market Watch",
+            "quote": "Heavy Kenyan betting volume backing Home Win at odds of 1.38."
+          },
+          {
+            "source": "X / Twitter Consensus",
+            "quote": "Al Qadsiah vs Al-Wasl FC is one of today's sharpest accumulator bankers."
+          }
+        ]
+      },
+      "analystPicks": [
+        {
+          "source": "Forebet AI Model",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "Algorithmic model estimates 72% outcome probability based on season metrics."
+        },
+        {
+          "source": "APWin Sharp Index",
+          "pick": "Home Win",
+          "conf": "High",
+          "note": "High value rating for AFC Champions League Elite round."
+        },
+        {
+          "source": "SportyTrader Consensus",
+          "pick": "Home Win",
+          "conf": "Medium",
+          "note": "Form and goal expectancy favor this market selection."
+        }
+      ]
+    }
+  }
+]
