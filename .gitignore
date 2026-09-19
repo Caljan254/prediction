@@ -17,6 +17,8 @@ Thumbs.db
 node_modules/
 .env
 *.sqlite
+*.zip
+infinityfree_upload/
 
 # Raw API key notes (secrets)
 api_key.md

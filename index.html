@@ -59,10 +59,6 @@
           <i class="fa-solid fa-arrow-right-to-bracket"></i>
         </button>
 
-        <div class="credentials-hint">
-          <span>Demo Credentials:</span>
-          <code>caljan</code> / <code>Caljan@2024</code>
-        </div>
       </form>
     </div>
   </div>
@@ -168,6 +164,11 @@
           </div>
           <div class="pane-actions">
             <div class="filter-group">
+              <select id="filterSport" class="form-select" title="Filter by sport">
+                <option value="ALL">All Sports</option>
+                <option value="Soccer">⚽ Football</option>
+                <option value="Basketball">🏀 Basketball</option>
+              </select>
               <select id="filterStatus" class="form-select">
                 <option value="ALL">All Statuses</option>
                 <option value="Pending">Pending (Not Played)</option>
@@ -990,6 +991,8 @@
                   <option value="Over 1.5">Over 1.5 Goals</option>
                   <option value="BTTS">Both Teams To Score (BTTS)</option>
                   <option value="BTTS No">Both Teams To Score - No</option>
+                  <option value="Over Total (Incl. OT)">🏀 Over Total (Incl. Overtime)</option>
+                  <option value="Under Total (Incl. OT)">🏀 Under Total (Incl. Overtime)</option>
                 </select>
               </div>
               <div class="form-group col">

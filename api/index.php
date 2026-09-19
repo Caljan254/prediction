@@ -180,6 +180,12 @@ if ($route === 'matches' && $method === 'GET') {
             $items = $feed['data'] ?? $feed ?? [];
             foreach ($items as $idx => $m) {
                 if (empty($m['home_team']) || empty($m['away_team'])) continue;
+                $isBball = (($m['sport_id'] ?? '') == 30) || 
+                           (($m['sport_name'] ?? '') === 'Basketball') || 
+                           (stripos($m['competition_name'] ?? '', 'basketball') !== false) ||
+                           (stripos($m['competition_name'] ?? '', 'bbl') !== false) ||
+                           (stripos($m['competition_name'] ?? '', 'nba') !== false);
+
                 $startTime = $m['start_time'] ?? (date('Y-m-d') . ' 19:45:00');
                 $parts = explode(' ', $startTime);
                 $mDate = $parts[0] ?? date('Y-m-d');
@@ -189,32 +195,112 @@ if ($route === 'matches' && $method === 'GET') {
                 $dOdd = (float)($m['neutral_odd'] ?? 3.40);
                 $aOdd = (float)($m['away_odd'] ?? 3.10);
 
-                // Simple heuristic prediction if not set
                 $pred = '1X';
+                $predType = '1X2';
                 $conf = 'Medium';
-                if ($hOdd < 1.60) { $pred = 'Home Win'; $conf = 'High'; }
-                elseif ($aOdd < 1.60) { $pred = 'Away Win'; $conf = 'High'; }
-                elseif ($hOdd > 3.00 && $aOdd > 3.00) { $pred = 'Under 2.5'; $conf = 'Medium'; }
+                $odds = $hOdd;
+                $totalLine = null;
+                $overOdd = null;
+                $underOdd = null;
+
+                if ($isBball) {
+                    $predType = 'Total (Incl. Overtime)';
+                    $totalMarket = null;
+                    if (!empty($m['odds']) && is_array($m['odds'])) {
+                        foreach ($m['odds'] as $oGroup) {
+                            if (($oGroup['sub_type_id'] ?? '') == 225 || stripos($oGroup['name'] ?? '', 'TOTAL') !== false) {
+                                $totalMarket = $oGroup;
+                                break;
+                            }
+                        }
+                    }
+
+                    $linesMap = [];
+                    if ($totalMarket && !empty($totalMarket['odds'])) {
+                        foreach ($totalMarket['odds'] as $o) {
+                            $line = $o['parsed_special_bet_value']['total'] ?? null;
+                            if (!$line && !empty($o['display'])) {
+                                if (preg_match('/([0-9]+(?:\.[0-9]+)?)/', $o['display'], $lm)) {
+                                    $line = $lm[1];
+                                }
+                            }
+                            if (!$line) continue;
+                            if (!isset($linesMap[$line])) $linesMap[$line] = [];
+                            $disp = strtoupper($o['display'] ?? '');
+                            $val = (float)($o['odd_value'] ?? 1.85);
+                            if (strpos($disp, 'OVER') !== false) $linesMap[$line]['over'] = $val;
+                            if (strpos($disp, 'UNDER') !== false) $linesMap[$line]['under'] = $val;
+                        }
+                    }
+
+                    $bestDiff = 999;
+                    $mainLine = null;
+                    foreach ($linesMap as $l => $pair) {
+                        if (isset($pair['over']) && isset($pair['under'])) {
+                            $diff = abs($pair['over'] - $pair['under']);
+                            if ($diff < $bestDiff) {
+                                $bestDiff = $diff;
+                                $mainLine = $l;
+                            }
+                        }
+                    }
+
+                    if (!$mainLine && !empty($linesMap)) {
+                        $mainLine = array_key_first($linesMap);
+                    }
+
+                    if ($mainLine && isset($linesMap[$mainLine])) {
+                        $totalLine = $mainLine;
+                        $overOdd = $linesMap[$mainLine]['over'] ?? 1.85;
+                        $underOdd = $linesMap[$mainLine]['under'] ?? 1.85;
+                        if ($overOdd <= $underOdd) {
+                            $pred = "Over {$mainLine}";
+                            $odds = $overOdd;
+                            $conf = $overOdd <= 1.75 ? 'High' : 'Medium';
+                        } else {
+                            $pred = "Under {$mainLine}";
+                            $odds = $underOdd;
+                            $conf = $underOdd <= 1.75 ? 'High' : 'Medium';
+                        }
+                    } else {
+                        $totalLine = '165.5';
+                        $overOdd = 1.85;
+                        $underOdd = 1.85;
+                        $pred = 'Over 165.5';
+                        $odds = 1.85;
+                        $conf = 'Medium';
+                    }
+                } else {
+                    if ($hOdd < 1.60) { $pred = 'Home Win'; $conf = 'High'; $odds = $hOdd; }
+                    elseif ($aOdd < 1.60) { $pred = 'Away Win'; $conf = 'High'; $odds = $aOdd; }
+                    elseif ($hOdd > 3.00 && $aOdd > 3.00) { $pred = 'Under 2.5'; $conf = 'Medium'; $odds = 1.70; }
+                }
+
+                $cleanLeague = trim(preg_replace('/^🏀\s*/', '', $m['competition_name'] ?? ($isBball ? 'Basketball' : 'Soccer')));
 
                 $matches[] = [
-                    'id' => $idx + 1,
+                    'id' => (int)($m['game_id'] ?? ($idx + 1)),
                     'betikaGameId' => (string)($m['game_id'] ?? ($idx + 1000)),
                     'matchId' => (string)($m['match_id'] ?? ($idx + 100000)),
+                    'sport' => $isBball ? 'Basketball' : 'Soccer',
                     'homeTeam' => trim($m['home_team']),
                     'awayTeam' => trim($m['away_team']),
-                    'league' => $m['competition_name'] ?? 'Premier League',
+                    'league' => ($isBball ? '🏀 ' : '') . $cleanLeague,
                     'date' => $mDate,
                     'time' => $mTime,
                     'status' => 'Pending',
                     'result' => '—',
                     'liveMinute' => null,
-                    'odds' => $hOdd,
+                    'odds' => (float)number_format($odds, 2, '.', ''),
+                    'totalLine' => $totalLine,
+                    'overOdd' => $overOdd,
+                    'underOdd' => $underOdd,
                     'betikaOdds' => ['home' => $hOdd, 'draw' => $dOdd, 'away' => $aOdd],
                     'prediction' => $pred,
-                    'predictionType' => '1X2',
+                    'predictionType' => $predType,
                     'confidence' => $conf,
                     'confidenceScore' => $conf === 'High' ? 82 : 68,
-                    'sources' => 'Odds Consensus (Betika/OddsAPI)',
+                    'sources' => $isBball ? 'CALJAN BasketAI, Total (Incl. OT)' : 'Odds Consensus (Betika/OddsAPI)',
                     'checkedAt' => null,
                     'analysis' => null
                 ];
@@ -230,42 +316,73 @@ if ($route === 'matches' && $method === 'GET') {
 }
 
 // -------------------------------------------------------------
-// Route: /api/sync (POST) — Fetches live Betika API via PHP cURL (bypasses browser CORS)
+// Route: /api/sync (POST) — Fetches live Betika API (Football & Basketball Total) via PHP cURL
 // -------------------------------------------------------------
 if ($route === 'sync' && $method === 'POST') {
-    $betikaUrl = 'https://api.betika.com/v1/uo/matches?tab=today&sport_id=14';
-    $ch = curl_init($betikaUrl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    $betikaData = null;
-    if ($httpCode === 200 && !empty($response)) {
-        $betikaData = json_decode($response, true);
-    }
-
-    if (!$betikaData || empty($betikaData['data'])) {
-        // Fallback to local file
-        $jsonFile = __DIR__ . '/../betika_live.json';
-        if (file_exists($jsonFile)) {
-            $betikaData = json_decode(file_get_contents($jsonFile), true);
+    function fetchCurlJson($url) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $res = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($code === 200 && !empty($res)) {
+            $j = json_decode($res, true);
+            return $j['data'] ?? [];
         }
+        return [];
     }
 
-    if (!$betikaData || empty($betikaData['data'])) {
+    $fbUrl = 'https://api.betika.com/v1/uo/matches?tab=today&sub_type_id=1,186&sport_id=14&tag_id=1&sort_id=1&period_id=-1&esports=false';
+    $bbUrl = 'https://api.betika.com/v1/uo/matches?tab=today&sport_id=30&sub_type_id=1,225';
+
+    $fbData = fetchCurlJson($fbUrl);
+    $bbData = fetchCurlJson($bbUrl);
+    $incoming = array_merge($fbData, $bbData);
+
+    $jsonFile = __DIR__ . '/../betika_live.json';
+    $existing = [];
+    if (file_exists($jsonFile)) {
+        $prev = json_decode(file_get_contents($jsonFile), true);
+        $existing = $prev['data'] ?? $prev ?? [];
+    }
+
+    if (empty($incoming)) {
+        $incoming = $existing;
+    }
+
+    if (empty($incoming)) {
         sendJsonResponse(['success' => false, 'error' => 'Unable to fetch Betika matches'], 500);
     }
 
-    // Save snapshot to betika_live.json
-    @file_put_contents(__DIR__ . '/../betika_live.json', json_encode($betikaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    // Merge incoming with existing so games that kicked off earlier today NEVER disappear
+    $incomingIds = [];
+    foreach ($incoming as $m) {
+        $gid = (string)($m['game_id'] ?? $m['match_id'] ?? '');
+        if ($gid !== '') $incomingIds[$gid] = true;
+    }
 
-    // Try storing in MySQL if connected
+    $combined = $incoming;
+    foreach ($existing as $oldM) {
+        $oldId = (string)($oldM['game_id'] ?? $oldM['match_id'] ?? '');
+        if ($oldId !== '' && !isset($incomingIds[$oldId])) {
+            $combined[] = $oldM;
+        }
+    }
+
+    // Save persistent merged snapshot to betika_live.json
+    @file_put_contents($jsonFile, json_encode([
+        'success' => true,
+        'count' => count($combined),
+        'timestamp' => date('c'),
+        'data' => $combined
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+    // Try storing/updating in MySQL if connected
     $synced = 0;
     try {
         $pdo = getDb();
@@ -284,8 +401,9 @@ if ($route === 'sync' && $method === 'POST') {
                 match_time = VALUES(match_time)
         ");
 
-        foreach ($betikaData['data'] as $m) {
+        foreach ($combined as $m) {
             if (empty($m['home_team']) || empty($m['away_team'])) continue;
+            $isBball = (($m['sport_id'] ?? '') == 30) || (($m['sport_name'] ?? '') === 'Basketball');
             $startTime = $m['start_time'] ?? (date('Y-m-d') . ' 19:45:00');
             $parts = explode(' ', $startTime);
             $mDate = $parts[0] ?? date('Y-m-d');
@@ -295,18 +413,20 @@ if ($route === 'sync' && $method === 'POST') {
             $dOdd = (float)($m['neutral_odd'] ?? 3.40);
             $aOdd = (float)($m['away_odd'] ?? 3.10);
 
-            $pred = '1X';
+            $pred = $isBball ? 'Over 165.5' : '1X';
             $conf = 70;
-            if ($hOdd < 1.60) { $pred = 'Home Win'; $conf = 85; }
-            elseif ($aOdd < 1.60) { $pred = 'Away Win'; $conf = 85; }
+            if (!$isBball) {
+                if ($hOdd < 1.60) { $pred = 'Home Win'; $conf = 85; }
+                elseif ($aOdd < 1.60) { $pred = 'Away Win'; $conf = 85; }
+            }
 
             $stmt->execute([
                 (string)($m['game_id'] ?? ''),
                 (string)($m['match_id'] ?? ''),
                 trim($m['home_team']),
                 trim($m['away_team']),
-                $m['competition_name'] ?? 'Soccer',
-                $m['category'] ?? 'Soccer',
+                $m['competition_name'] ?? ($isBball ? 'Basketball' : 'Soccer'),
+                $isBball ? 'Basketball' : ($m['category'] ?? 'Soccer'),
                 $startTime,
                 $mDate,
                 $mTime,
@@ -315,19 +435,19 @@ if ($route === 'sync' && $method === 'POST') {
                 $aOdd,
                 $pred,
                 $conf,
-                'Betika Live API'
+                $isBball ? 'Betika Basketball Total (Incl. OT)' : 'Betika Live API'
             ]);
             $synced++;
         }
     } catch (Throwable $e) {
-        $synced = count($betikaData['data']);
+        $synced = count($combined);
     }
 
     sendJsonResponse([
         'success' => true,
         'source' => 'live_api_php_proxy',
         'syncedCount' => $synced,
-        'message' => "Successfully synchronized {$synced} real Betika matches via InfinityFree PHP proxy."
+        'message' => "Successfully synchronized {$synced} real Betika Football & Basketball matches."
     ]);
 }
 

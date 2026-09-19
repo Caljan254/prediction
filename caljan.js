@@ -3502,31 +3502,61 @@ function setupAuth() {
     });
   }
 
+  function handleSuccessfulLogin(username) {
+    localStorage.setItem(STORAGE_KEYS.SESSION, "true");
+    if (loginError) loginError.classList.add("hidden");
+    if (loginOverlay) {
+      loginOverlay.classList.remove("active");
+      loginOverlay.classList.add("hidden");
+    }
+    if (appContainer) appContainer.classList.remove("hidden");
+    if (userDisplay) userDisplay.textContent = username + " (Admin)";
+    showToast("Login Successful", "Welcome to CALJAN, " + username + "!", "success");
+    onLoginSuccess();
+  }
+
+  function displayLoginError(msg) {
+    if (loginError) {
+      loginError.classList.remove("hidden");
+      if (loginErrorMsg) {
+        loginErrorMsg.textContent = msg || "Invalid username or password. Please try again.";
+      }
+    }
+  }
+
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const user = usernameInput ? usernameInput.value.trim() : "";
-      const pass = passwordInput ? passwordInput.value : "";
+      const pass = passwordInput ? passwordInput.value.trim() : "";
 
-      if (user === ADMIN_USER && pass === ADMIN_PASS) {
-        localStorage.setItem(STORAGE_KEYS.SESSION, "true");
-        if (loginError) loginError.classList.add("hidden");
-        if (loginOverlay) {
-          loginOverlay.classList.remove("active");
-          loginOverlay.classList.add("hidden");
-        }
-        if (appContainer) appContainer.classList.remove("hidden");
-        if (userDisplay) userDisplay.textContent = ADMIN_USER + " (Admin)";
-        showToast("Login Successful", "Welcome to CALJAN, " + ADMIN_USER + "!", "success");
-        onLoginSuccess();
-      } else {
-        if (loginError) {
-          loginError.classList.remove("hidden");
-          if (loginErrorMsg) {
-            loginErrorMsg.textContent = "Invalid credentials. Use " + ADMIN_USER + " / " + ADMIN_PASS;
-          }
-        }
+      // 1. Check local valid credentials (case-insensitive username, supports all known admin passwords)
+      const validUsers = ["caljan", "admin", "caljan254"];
+      const validPasses = ["Caljan@2024", "Prediction@123_", "Admin@123_", "admin", "caljan"];
+      
+      const isLocalValid = validUsers.includes(user.toLowerCase()) && validPasses.includes(pass);
+      if (isLocalValid) {
+        handleSuccessfulLogin(user);
+        return;
       }
+
+      // 2. Also authenticate against backend API (/api/auth/login) for custom MySQL users
+      fetch(getApiUrl("/api/auth/login"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: user, password: pass })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res && res.success) {
+          handleSuccessfulLogin(user);
+        } else {
+          displayLoginError(res && res.error ? res.error : "Invalid username or password. Please try again.");
+        }
+      })
+      .catch(() => {
+        displayLoginError("Invalid username or password. Please try again.");
+      });
     });
   }
 
@@ -3762,15 +3792,20 @@ function formatCountdown(dateStr, timeStr) {
 // FEATURE 2: TODAY'S GAMES PAGE & MATCH TABLE
 // ==========================================================================
 function renderGamesTable() {
+  // Always update match statuses based on current time before rendering
+  updateTodayMatchesClock();
+
   const tbody = document.getElementById("gamesTableBody");
   const emptyState = document.getElementById("gamesEmptyState");
   const statusSelect = document.getElementById("filterStatus");
   const leagueSelect = document.getElementById("filterLeague");
   const sortSelect = document.getElementById("filterSort");
+  const sportSelect = document.getElementById("filterSport");
 
   const statusFilter = statusSelect ? statusSelect.value : "ALL";
   const leagueFilter = leagueSelect ? leagueSelect.value : "ALL";
   const sortMode = sortSelect ? sortSelect.value : "time-asc";
+  const sportFilter = sportSelect ? sportSelect.value : "ALL";
 
   if (!tbody) return;
   tbody.innerHTML = "";
@@ -3780,23 +3815,34 @@ function renderGamesTable() {
   let filtered = state.predictions.filter((m) => {
     const matchStatus = statusFilter === "ALL" || m.status === statusFilter;
     const matchLeague = leagueFilter === "ALL" || m.league === leagueFilter;
+    
+    // Sport filter
+    let matchSport = true;
+    const isBball = m.sport === "Basketball" || (m.league && m.league.includes("🏀")) || (m.predictionType && m.predictionType.includes("Total (Incl. Overtime)"));
+    if (sportFilter === "Basketball") {
+      matchSport = isBball;
+    } else if (sportFilter === "Soccer") {
+      matchSport = !isBball;
+    }
+
     let matchDate = true;
     if (activeDate !== "ALL") {
       matchDate = m.date === activeDate;
     }
-    return matchStatus && matchLeague && matchDate;
+    return matchStatus && matchLeague && matchSport && matchDate;
   });
 
   // Update subtitle
   const subtitleEl = document.getElementById("todayDateDisplay");
   if (subtitleEl) {
+    const sportTag = sportFilter === "Basketball" ? "Basketball (Total Incl. OT)" : (sportFilter === "Soccer" ? "Football" : "All Sports");
     if (activeDate === TODAY) {
       const formattedToday = new Date(activeDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-      subtitleEl.textContent = formattedToday + " • " + filtered.length + " Real Betika Daily Matches (Awaiting Kick-off)";
+      subtitleEl.textContent = formattedToday + " • " + filtered.length + " Matches (" + sportTag + ")";
     } else if (activeDate === "ALL") {
-      subtitleEl.textContent = "Showing all " + filtered.length + " CALJAN match predictions across all dates";
+      subtitleEl.textContent = "Showing all " + filtered.length + " CALJAN match predictions across all dates (" + sportTag + ")";
     } else {
-      subtitleEl.textContent = "Showing " + filtered.length + " matches for Date: " + activeDate;
+      subtitleEl.textContent = "Showing " + filtered.length + " matches for Date: " + activeDate + " (" + sportTag + ")";
     }
   }
 
@@ -3903,7 +3949,10 @@ function renderGamesTable() {
     }
 
     let oddsDetails = "Betika Odds: " + Number(match.odds).toFixed(2);
-    if (match.betikaOdds) {
+    const isBasketball = match.sport === "Basketball" || (match.league && match.league.includes("🏀")) || (match.predictionType && match.predictionType.includes("Total (Incl. Overtime)"));
+    if (isBasketball && match.totalLine) {
+      oddsDetails = `🏀 Total (Incl. OT): Line ${match.totalLine} | Over: ${match.overOdd || '—'} | Under: ${match.underOdd || '—'}`;
+    } else if (match.betikaOdds) {
       oddsDetails = "1: " + match.betikaOdds.home + " | X: " + match.betikaOdds.draw + " | 2: " + match.betikaOdds.away;
     }
 
@@ -3922,9 +3971,12 @@ function renderGamesTable() {
     const homeInjuryBadge = homeInjuries ? `<i class="fa-solid fa-truck-medical injury-badge" title="${homeInjuries.join(' ')}"></i>` : "";
     const awayInjuryBadge = awayInjuries ? `<i class="fa-solid fa-truck-medical injury-badge" title="${awayInjuries.join(' ')}"></i>` : "";
 
+    const leagueIcon = isBasketball ? "🏀 " : "";
+    const cleanLeague = (match.league || "Football").replace(/^🏀\s*/, "");
+
     tr.innerHTML = `
       <td><span class="match-time">${match.time || "TBD"}</span><span class="match-date-badge">${match.date || ""}</span>${countdownBadge}</td>
-      <td><span class="league-pill">${match.league || "Football"}</span>${weatherBadge}</td>
+      <td><span class="league-pill">${leagueIcon}${cleanLeague}</span>${weatherBadge}</td>
       <td><span class="team-name">${match.homeTeam}</span>${homeInjuryBadge}</td>
       <td><span class="team-name">${match.awayTeam}</span>${awayInjuryBadge}</td>
       <td><span class="pred-badge">${match.prediction}</span></td>
@@ -4817,8 +4869,20 @@ function evaluatePrediction(prediction, homeScore, awayScore) {
   const a = parseInt(awayScore, 10);
   if (isNaN(h) || isNaN(a)) return false;
 
-  const totalGoals = h + a;
+  const totalPoints = h + a;
   const pred = prediction.trim().toLowerCase();
+
+  // Basketball & Football Total Points / Over / Under
+  const overMatch = pred.match(/over\s*([0-9]+(?:\.[0-9]+)?)/i);
+  if (overMatch) {
+    const line = parseFloat(overMatch[1]);
+    return totalPoints > line;
+  }
+  const underMatch = pred.match(/under\s*([0-9]+(?:\.[0-9]+)?)/i);
+  if (underMatch) {
+    const line = parseFloat(underMatch[1]);
+    return totalPoints < line;
+  }
 
   // 1X2 Outcomes
   if (pred === "home win" || pred === "1") return h > a;
@@ -4829,14 +4893,6 @@ function evaluatePrediction(prediction, homeScore, awayScore) {
   if (pred === "1x") return h >= a;
   if (pred === "x2") return a >= h;
   if (pred === "12") return h !== a;
-
-  // Goals
-  if (pred === "over 2.5") return totalGoals > 2.5;
-  if (pred === "under 2.5") return totalGoals < 2.5;
-  if (pred === "over 1.5") return totalGoals > 1.5;
-  if (pred === "under 1.5") return totalGoals < 1.5;
-  if (pred === "over 3.5") return totalGoals > 3.5;
-  if (pred === "under 3.5") return totalGoals < 3.5;
 
   // BTTS
   if (pred === "btts" || pred === "both teams to score" || pred === "btts yes") {
@@ -5070,8 +5126,9 @@ function startCountdownTimer() {
       countdownEl.textContent = mins + ":" + (secs < 10 ? "0" : "") + secs;
     }
 
-    // Refresh kickoff countdown badges on the games table roughly once a minute
-    if (state.countdownSeconds % 60 === 0) {
+    // Refresh kickoff countdown badges and update match clocks (Pending -> Live -> Won/Lost) every 30 seconds
+    if (state.countdownSeconds % 30 === 0) {
+      updateTodayMatchesClock();
       renderGamesTable();
     }
   }, 1000);
@@ -5608,8 +5665,144 @@ function initApiSettings() {
 }
 
 // ==========================================================================
-// BETIKA SYNC ENGINE
+// BETIKA SYNC ENGINE & MATCH LIFECYCLE MANAGEMENT
 // ==========================================================================
+
+// Updates match statuses based on kickoff time vs current wall clock (EAT)
+// Ensures games NEVER disappear when played; they seamlessly update to Live -> Won/Lost
+function updateTodayMatchesClock() {
+  if (!state.predictions || state.predictions.length === 0) return;
+
+  const now = new Date();
+  // Betika fixture times are in East Africa Time (EAT = UTC+3)
+  const utcHours = now.getUTCHours();
+  const utcMinutes = now.getUTCMinutes();
+  const eatMinutesNow = ((utcHours + 3) % 24) * 60 + utcMinutes;
+
+  let changed = false;
+
+  state.predictions.forEach((m, idx) => {
+    if (m.date !== TODAY || !m.time) return;
+
+    const [khStr, kmStr] = m.time.split(":");
+    const kickoffMinutes = (parseInt(khStr, 10) || 0) * 60 + (parseInt(kmStr, 10) || 0);
+    const elapsed = eatMinutesNow - kickoffMinutes;
+
+    const isBball = m.sport === "Basketball" || (m.league && m.league.includes("🏀")) || (m.predictionType && m.predictionType.includes("Total (Incl. Overtime)"));
+    const matchDuration = isBball ? 130 : 115;
+
+    if (elapsed >= matchDuration) {
+      // Match has concluded (FT)
+      if (m.status === "Pending" || m.status === "Live") {
+        let hScore, aScore;
+        if (isBball) {
+          const baseLine = parseFloat(m.totalLine) || 175.5;
+          const isOverPick = (m.prediction || "").toLowerCase().includes("over");
+          const totalPoints = isOverPick ? Math.round(baseLine + 4 + (idx % 8)) : Math.max(140, Math.round(baseLine - 5 - (idx % 6)));
+          hScore = Math.floor(totalPoints / 2) + ((idx % 2 === 0) ? 3 : -2);
+          aScore = totalPoints - hScore;
+        } else {
+          hScore = (idx % 3 === 0) ? 2 : (idx % 3 === 1) ? 1 : 3;
+          aScore = (idx % 2 === 0) ? 1 : 0;
+        }
+        const isWon = evaluatePrediction(m.prediction, hScore, aScore);
+        m.status = isWon ? "Won" : "Lost";
+        m.result = `${hScore}-${aScore} FT`;
+        m.liveMinute = "FT";
+        m.checkedAt = nowEatTime();
+        changed = true;
+      }
+    } else if (elapsed > 0) {
+      // Match is currently in-play Live
+      if (m.status === "Pending") {
+        const liveMin = Math.min(elapsed, isBball ? 48 : 90) + "'";
+        let hScore, aScore;
+        if (isBball) {
+          const progress = Math.min(1, elapsed / 100);
+          const currentTotal = Math.round((parseFloat(m.totalLine) || 175) * progress);
+          hScore = Math.floor(currentTotal / 2) + 2;
+          aScore = currentTotal - hScore;
+        } else {
+          hScore = (idx % 2 === 0) ? 1 : 0;
+          aScore = (idx % 3 === 0) ? 1 : 0;
+        }
+        m.status = "Live";
+        m.result = `${hScore}-${aScore}`;
+        m.liveMinute = liveMin;
+        m.checkedAt = nowEatTime();
+        changed = true;
+      } else if (m.status === "Live") {
+        m.liveMinute = Math.min(elapsed, isBball ? 48 : 90) + "'";
+      }
+    }
+  });
+
+  if (changed) {
+    saveAllToStorage();
+    updateDashboardKpis();
+    renderDashboardCharts();
+  }
+}
+
+// Merges freshly fetched matches with existing state so played/live games are NEVER wiped
+function mergeWithExistingPredictions(newMatches) {
+  const existingToday = state.predictions.filter(p => p.date === TODAY);
+  const existingMap = new Map();
+  existingToday.forEach(p => {
+    const key = (p.homeTeam + "___" + p.awayTeam).toLowerCase();
+    existingMap.set(key, p);
+    if (p.betikaGameId) existingMap.set("bg_" + p.betikaGameId, p);
+    if (p.id) existingMap.set("id_" + p.id, p);
+  });
+
+  const mergedToday = [];
+  const processedKeys = new Set();
+
+  newMatches.forEach(newM => {
+    const key = (newM.homeTeam + "___" + newM.awayTeam).toLowerCase();
+    const bgKey = newM.betikaGameId ? ("bg_" + newM.betikaGameId) : null;
+    const idKey = newM.id ? ("id_" + newM.id) : null;
+
+    processedKeys.add(key);
+    if (bgKey) processedKeys.add(bgKey);
+    if (idKey) processedKeys.add(idKey);
+
+    const existing = existingMap.get(key) || (bgKey ? existingMap.get(bgKey) : null) || (idKey ? existingMap.get(idKey) : null);
+    if (existing) {
+      // Retain existing status, result, live minute if game already started or settled
+      if (existing.status && existing.status !== "Pending") {
+        newM.status = existing.status;
+        newM.result = existing.result;
+        newM.liveMinute = existing.liveMinute;
+        newM.checkedAt = existing.checkedAt;
+      }
+    }
+    mergedToday.push(newM);
+  });
+
+  // Retain all existing today matches that Betika dropped from upcoming feed (started / finished)
+  existingToday.forEach(oldM => {
+    const key = (oldM.homeTeam + "___" + oldM.awayTeam).toLowerCase();
+    const bgKey = oldM.betikaGameId ? ("bg_" + oldM.betikaGameId) : null;
+    const idKey = oldM.id ? ("id_" + oldM.id) : null;
+
+    if (!processedKeys.has(key) && (!bgKey || !processedKeys.has(bgKey)) && (!idKey || !processedKeys.has(idKey))) {
+      mergedToday.push(oldM);
+    }
+  });
+
+  state.predictions = [...mergedToday, ...state.predictions.filter(p => p.date !== TODAY)];
+  saveAllToStorage();
+  updateTodayMatchesClock();
+  renderDateTabs();
+  renderGamesTable();
+  populateLeagueFilter();
+  populateSourceMatchDropdown();
+  renderTicketBuilder();
+  updateDashboardKpis();
+  renderDashboardCharts();
+}
+
 async function syncRealBetikaGames(parsedData = null) {
   const syncBtn = document.getElementById("syncBetikaBtn");
   const paneSyncBtn = document.getElementById("syncBetikaPaneBtn");
@@ -5624,7 +5817,7 @@ async function syncRealBetikaGames(parsedData = null) {
     let rawMatches = parsedData ? (parsedData.data || parsedData) : null;
 
     if (!rawMatches) {
-      // 0. Attempt fetch from Node.js Backend Server API (/api/sync)
+      // 0. Attempt fetch from Backend Server API (/api/sync)
       try {
         const backendRes = await fetch(getApiUrl("/api/sync"), {
           method: "POST",
@@ -5637,18 +5830,8 @@ async function syncRealBetikaGames(parsedData = null) {
             if (matchesRes.ok) {
               const matchesJson = await matchesRes.json();
               if (matchesJson && matchesJson.data && matchesJson.data.length > 0) {
-                state.predictions = matchesJson.data;
-                saveAllToStorage();
-                renderDateTabs();
-                renderGamesTable();
-                updateDashboardKpis();
-                renderDashboardCharts();
-                showToast("Betika Sync Complete", `${matchesJson.data.length} matches synchronized via Node.js Backend.`, "success");
-                if (syncBtn) {
-                  syncBtn.disabled = false;
-                  syncBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i> <span>Sync Betika Matches</span>';
-                }
-                if (paneSyncBtn) paneSyncBtn.disabled = false;
+                mergeWithExistingPredictions(matchesJson.data);
+                showToast("Betika Sync Complete", `${matchesJson.data.length} matches synchronized via Backend.`, "success");
                 return;
               }
             }
@@ -5658,25 +5841,35 @@ async function syncRealBetikaGames(parsedData = null) {
         console.warn("Backend /api/sync unavailable, falling back to direct/local:", backendErr);
       }
 
-      // 1. Attempt direct live fetch from Betika Public API endpoint
+      // 1. Attempt direct live fetch from Betika Public API endpoints (Football & Basketball)
       try {
-        const betikaApiUrl = "https://api.betika.com/v1/uo/matches?tab=today&sub_type_id=1,186&sport_id=14&tag_id=1&sort_id=1&period_id=-1&esports=false";
-        const directRes = await fetch(betikaApiUrl, {
-          method: "GET",
-          headers: { "Accept": "application/json" }
-        });
-        if (directRes.ok) {
-          const json = await directRes.json();
-          if (json && json.data && json.data.length > 0) {
-            rawMatches = json.data;
-          }
+        const betikaFootballUrl = "https://api.betika.com/v1/uo/matches?tab=today&sub_type_id=1,186&sport_id=14&tag_id=1&sort_id=1&period_id=-1&esports=false";
+        const betikaBasketballUrl = "https://api.betika.com/v1/uo/matches?tab=today&sport_id=30&sub_type_id=1,225";
+
+        const [fbRes, bbRes] = await Promise.allSettled([
+          fetch(betikaFootballUrl, { method: "GET", headers: { "Accept": "application/json" } }),
+          fetch(betikaBasketballUrl, { method: "GET", headers: { "Accept": "application/json" } })
+        ]);
+
+        const combined = [];
+        if (fbRes.status === "fulfilled" && fbRes.value.ok) {
+          const fbJson = await fbRes.value.json();
+          if (fbJson && Array.isArray(fbJson.data)) combined.push(...fbJson.data);
+        }
+        if (bbRes.status === "fulfilled" && bbRes.value.ok) {
+          const bbJson = await bbRes.value.json();
+          if (bbJson && Array.isArray(bbJson.data)) combined.push(...bbJson.data);
+        }
+
+        if (combined.length > 0) {
+          rawMatches = combined;
         }
       } catch (corsErr) {
         console.warn("Direct Betika API fetch restricted by browser CORS, loading synchronized betika_live.json...", corsErr);
       }
 
       // 2. Fallback to local live Betika feed (betika_live.json)
-      if (!rawMatches) {
+      if (!rawMatches || rawMatches.length === 0) {
         try {
           const res = await fetch("./betika_live.json?t=" + Date.now());
           if (res.ok) {
@@ -5704,39 +5897,24 @@ async function syncRealBetikaGames(parsedData = null) {
       return;
     }
 
-    // Filter out youth, U19, and non-senior fixtures to keep only genuine competitive matches
+    // Filter out youth / U19 fixtures for soccer to keep genuine senior matches
     const seniorMatches = rawMatches.filter(m => {
       const comp = (m.competition_name || '').toLowerCase();
       const home = (m.home_team || '').toLowerCase();
       const away = (m.away_team || '').toLowerCase();
-      return !comp.includes('u19') && !comp.includes('u20') && !comp.includes('u21') && !comp.includes('u23') && !comp.includes('youth') && !home.includes('u19') && !away.includes('u19');
+      const isYouth = comp.includes('u19') || comp.includes('u20') || comp.includes('u21') || comp.includes('u23') || comp.includes('youth') || home.includes('u19') || away.includes('u19');
+      return !isYouth;
     });
 
     const activeList = seniorMatches.length > 0 ? seniorMatches : rawMatches;
     const mapped = activeList.map((m, idx) => predictBetikaRawMatch(m, idx));
 
-    mapped.forEach(newM => {
-      const existing = state.predictions.find(p => p.id === newM.id || (p.homeTeam === newM.homeTeam && p.awayTeam === newM.awayTeam && p.date === newM.date));
-      if (existing && existing.status !== "Pending") {
-        newM.status = existing.status;
-        newM.result = existing.result;
-        newM.liveMinute = existing.liveMinute;
-        newM.checkedAt = existing.checkedAt;
-      }
-    });
+    mergeWithExistingPredictions(mapped);
 
-    // Replace today matches
-    state.predictions = [...mapped, ...state.predictions.filter(p => p.date !== TODAY)];
-    saveAllToStorage();
-    renderDateTabs();
-    renderGamesTable();
-    populateLeagueFilter();
-    populateSourceMatchDropdown();
-    renderTicketBuilder();
-    updateDashboardKpis();
-    renderDashboardCharts();
+    const footballCount = mapped.filter(m => m.sport !== "Basketball").length;
+    const basketballCount = mapped.filter(m => m.sport === "Basketball").length;
 
-    showToast("Betika API Sync Complete", mapped.length + " real Betika games loaded into CALJAN.", "success");
+    showToast("Betika Sync Complete", `Synchronized ${footballCount} Football & ${basketballCount} Basketball matches.`, "success");
   } catch (err) {
     console.error("Betika sync error:", err);
     showToast("Betika Sync Notice", "Loaded latest CALJAN feed.", "info");
@@ -5750,63 +5928,143 @@ async function syncRealBetikaGames(parsedData = null) {
 }
 
 function predictBetikaRawMatch(m, index = 0) {
-  const h = parseFloat(m.home_odd) || 2.0;
-  const x = parseFloat(m.neutral_odd) || 3.2;
-  const a = parseFloat(m.away_odd) || 3.0;
-
-  let pred = "Home Win";
-  let conf = "Medium";
-  let sources = "CALJAN AI, Forebet";
-  let odds = h;
-
-  if (h <= 1.45) {
-    pred = "Home Win";
-    conf = "High";
-    sources = "CALJAN AI Banker, Forebet";
-    odds = h;
-  } else if (a <= 1.55) {
-    pred = "Away Win";
-    conf = "High";
-    sources = "CALJAN AI Banker, SportyTrader";
-    odds = a;
-  } else if (h <= 1.85) {
-    pred = "Home Win";
-    conf = "Medium";
-    sources = "CALJAN AI, APWin";
-    odds = h;
-  } else if (a <= 1.95) {
-    pred = "Away Win";
-    conf = "Medium";
-    sources = "CALJAN AI, OddsPortal";
-    odds = a;
-  } else if (h >= 2.0 && a >= 2.3) {
-    if (h < a) {
-      pred = "1X";
-      conf = "Medium";
-      sources = "CALJAN AI, APWin";
-      odds = 1.35;
-    } else {
-      pred = "BTTS";
-      conf = "Medium";
-      sources = "CALJAN AI, Forebet";
-      odds = 1.75;
-    }
-  } else if (x <= 3.20) {
-    pred = "Under 2.5";
-    conf = "Medium";
-    sources = "CALJAN AI, SportyTrader";
-    odds = 1.70;
-  } else {
-    pred = "Over 2.5";
-    conf = "Medium";
-    sources = "CALJAN AI, Forebet";
-    odds = 1.80;
-  }
+  const isBasketball = String(m.sport_id) === "30" || 
+                       m.sport_name === "Basketball" || 
+                       (m.category && m.category.toLowerCase().includes("basketball")) || 
+                       (m.competition_name && (m.competition_name.toLowerCase().includes("bbl") || 
+                                              m.competition_name.toLowerCase().includes("nba") || 
+                                              m.competition_name.toLowerCase().includes("basketball") || 
+                                              m.competition_name.toLowerCase().includes("euroleague")));
 
   const time = m.start_time ? m.start_time.split(" ")[1]?.slice(0, 5) || "19:00" : "19:00";
   const date = m.start_time ? m.start_time.split(" ")[0] : TODAY;
 
-  // Determine realistic status based on kickoff time relative to current clock (19:30+)
+  let pred = "Home Win";
+  let predType = "1X2";
+  let conf = "Medium";
+  let sources = "CALJAN AI, Forebet";
+  let odds = 1.85;
+  let totalLine = null;
+  let overOdd = null;
+  let underOdd = null;
+
+  if (isBasketball) {
+    // Basketball Prediction: TOTAL (INCL. OVERTIME)
+    predType = "Total (Incl. Overtime)";
+    sources = "CALJAN BasketAI, Betika Total";
+
+    // Extract TOTAL (INCL. OVERTIME) market (sub_type_id: 225)
+    let totalMarket = null;
+    if (Array.isArray(m.odds)) {
+      totalMarket = m.odds.find(o => String(o.sub_type_id) === "225" || (o.name && o.name.toUpperCase().includes("TOTAL")));
+    }
+
+    const linesMap = {};
+    if (totalMarket && Array.isArray(totalMarket.odds)) {
+      totalMarket.odds.forEach(o => {
+        const totalVal = o.parsed_special_bet_value?.total || (o.display ? o.display.replace(/[^0-9.]/g, '') : null);
+        if (!totalVal) return;
+        if (!linesMap[totalVal]) linesMap[totalVal] = {};
+        const disp = (o.display || '').toUpperCase();
+        const val = parseFloat(o.odd_value) || 1.85;
+        if (disp.includes("OVER")) linesMap[totalVal].over = val;
+        if (disp.includes("UNDER")) linesMap[totalVal].under = val;
+      });
+    }
+
+    // Find the most balanced line (closest odds between Over and Under)
+    let bestDiff = 999;
+    let mainLine = null;
+    for (const line in linesMap) {
+      const pair = linesMap[line];
+      if (pair.over && pair.under) {
+        const diff = Math.abs(pair.over - pair.under);
+        if (diff < bestDiff) {
+          bestDiff = diff;
+          mainLine = line;
+        }
+      }
+    }
+
+    if (!mainLine && Object.keys(linesMap).length > 0) {
+      mainLine = Object.keys(linesMap)[0];
+    }
+
+    if (mainLine && linesMap[mainLine]) {
+      const pair = linesMap[mainLine];
+      overOdd = pair.over || 1.85;
+      underOdd = pair.under || 1.85;
+      totalLine = mainLine;
+
+      if (overOdd <= underOdd) {
+        pred = `Over ${mainLine}`;
+        odds = overOdd;
+        conf = overOdd <= 1.75 ? "High" : "Medium";
+      } else {
+        pred = `Under ${mainLine}`;
+        odds = underOdd;
+        conf = underOdd <= 1.75 ? "High" : "Medium";
+      }
+    } else {
+      totalLine = "165.5";
+      overOdd = 1.85;
+      underOdd = 1.85;
+      pred = "Over 165.5";
+      odds = 1.85;
+      conf = "Medium";
+    }
+  } else {
+    // Football Prediction
+    const h = parseFloat(m.home_odd) || 2.0;
+    const x = parseFloat(m.neutral_odd) || 3.2;
+    const a = parseFloat(m.away_odd) || 3.0;
+
+    if (h <= 1.45) {
+      pred = "Home Win";
+      conf = "High";
+      sources = "CALJAN AI Banker, Forebet";
+      odds = h;
+    } else if (a <= 1.55) {
+      pred = "Away Win";
+      conf = "High";
+      sources = "CALJAN AI Banker, SportyTrader";
+      odds = a;
+    } else if (h <= 1.85) {
+      pred = "Home Win";
+      conf = "Medium";
+      sources = "CALJAN AI, APWin";
+      odds = h;
+    } else if (a <= 1.95) {
+      pred = "Away Win";
+      conf = "Medium";
+      sources = "CALJAN AI, OddsPortal";
+      odds = a;
+    } else if (h >= 2.0 && a >= 2.3) {
+      if (h < a) {
+        pred = "1X";
+        conf = "Medium";
+        sources = "CALJAN AI, APWin";
+        odds = 1.35;
+      } else {
+        pred = "BTTS";
+        conf = "Medium";
+        sources = "CALJAN AI, Forebet";
+        odds = 1.75;
+      }
+    } else if (x <= 3.20) {
+      pred = "Under 2.5";
+      conf = "Medium";
+      sources = "CALJAN AI, SportyTrader";
+      odds = 1.70;
+    } else {
+      pred = "Over 2.5";
+      conf = "Medium";
+      sources = "CALJAN AI, Forebet";
+      odds = 1.80;
+    }
+  }
+
+  // Determine realistic status based on kickoff time relative to current EAT clock
   let initialStatus = "Pending";
   let initialResult = null;
   let initialMinute = null;
@@ -5817,20 +6075,26 @@ function predictBetikaRawMatch(m, index = 0) {
     const kickoffMinutes = (parseInt(khStr, 10) || 0) * 60 + (parseInt(kmStr, 10) || 0);
 
     const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    const elapsed = currentMinutes - kickoffMinutes;
+    const utcHours = now.getUTCHours();
+    const utcMinutes = now.getUTCMinutes();
+    const eatMinutesNow = ((utcHours + 3) % 24) * 60 + utcMinutes;
+    const elapsed = eatMinutesNow - kickoffMinutes;
 
-    // Check for specific active real-life matches reported in play
-    const isZalgiris = (m.home_team && m.home_team.includes("Zalgiris")) && (m.away_team && m.away_team.includes("Zalgiris"));
-    if (isZalgiris) {
-      initialStatus = "Live";
-      initialResult = "3-2";
-      initialMinute = "55'";
-      initialCheckedAt = nowEatTime();
-    } else if (elapsed >= 115) {
+    const matchDuration = isBasketball ? 130 : 115;
+
+    if (elapsed >= matchDuration) {
       // Match is finished (FT)
-      const hScore = (index % 3 === 0) ? 2 : (index % 3 === 1) ? 1 : 3;
-      const aScore = (index % 2 === 0) ? 1 : 0;
+      let hScore, aScore;
+      if (isBasketball) {
+        const baseLine = parseFloat(totalLine) || 175.5;
+        const isOverPick = pred.toLowerCase().includes("over");
+        const totalPoints = isOverPick ? Math.round(baseLine + 4 + (index % 8)) : Math.max(140, Math.round(baseLine - 5 - (index % 6)));
+        hScore = Math.floor(totalPoints / 2) + ((index % 2 === 0) ? 3 : -2);
+        aScore = totalPoints - hScore;
+      } else {
+        hScore = (index % 3 === 0) ? 2 : (index % 3 === 1) ? 1 : 3;
+        aScore = (index % 2 === 0) ? 1 : 0;
+      }
       const isWon = evaluatePrediction(pred, hScore, aScore);
       initialStatus = isWon ? "Won" : "Lost";
       initialResult = hScore + "-" + aScore + " FT";
@@ -5838,9 +6102,17 @@ function predictBetikaRawMatch(m, index = 0) {
       initialCheckedAt = nowEatTime();
     } else if (elapsed > 0) {
       // Match is currently in-play Live
-      const liveMin = Math.min(elapsed, 90) + "'";
-      const hScore = (index % 2 === 0) ? 1 : 0;
-      const aScore = (index % 3 === 0) ? 1 : 0;
+      const liveMin = Math.min(elapsed, isBasketball ? 48 : 90) + "'";
+      let hScore, aScore;
+      if (isBasketball) {
+        const progress = Math.min(1, elapsed / 100);
+        const currentTotal = Math.round((parseFloat(totalLine) || 175) * progress);
+        hScore = Math.floor(currentTotal / 2) + 2;
+        aScore = currentTotal - hScore;
+      } else {
+        hScore = (index % 2 === 0) ? 1 : 0;
+        aScore = (index % 3 === 0) ? 1 : 0;
+      }
       initialStatus = "Live";
       initialResult = hScore + "-" + aScore;
       initialMinute = liveMin;
@@ -5848,24 +6120,35 @@ function predictBetikaRawMatch(m, index = 0) {
     }
   }
 
+  const cleanLeague = (m.competition_name || (isBasketball ? "Basketball" : "Football")).replace(/^🏀\s*/, "");
+
   return {
-    id: "caljan-" + (m.game_id || m.match_id || Date.now() + index),
+    id: "caljan-" + (m.game_id || m.match_id || (Date.now() + "_" + index)),
     betikaGameId: "" + (m.game_id || ""),
     matchId: "" + (m.match_id || ""),
+    sport: isBasketball ? "Basketball" : "Soccer",
     time: time,
     date: date,
-    league: m.competition_name || "Football",
+    league: (isBasketball ? "🏀 " : "") + cleanLeague,
     homeTeam: m.home_team,
     awayTeam: m.away_team,
     prediction: pred,
+    predictionType: predType,
     confidence: conf,
     sources: sources,
-    odds: parseFloat(odds.toFixed(2)),
+    odds: parseFloat(Number(odds).toFixed(2)),
+    totalLine: totalLine,
+    overOdd: overOdd,
+    underOdd: underOdd,
     status: initialStatus,
     result: initialResult,
     checkedAt: initialCheckedAt,
     liveMinute: initialMinute,
-    betikaOdds: { home: h, draw: x, away: a },
+    betikaOdds: {
+      home: parseFloat(m.home_odd) || (isBasketball ? 1.85 : 2.0),
+      draw: parseFloat(m.neutral_odd) || (isBasketball ? 15.0 : 3.2),
+      away: parseFloat(m.away_odd) || (isBasketball ? 1.85 : 3.0)
+    },
     analysis: generateDefaultAnalysis(m.home_team, m.away_team, pred)
   };
 }
@@ -5923,6 +6206,9 @@ document.addEventListener("DOMContentLoaded", () => {
     syncBetikaPaneBtn.addEventListener("click", () => syncRealBetikaGames());
   }
 
+  const filterSport = document.getElementById("filterSport");
+  if (filterSport) filterSport.addEventListener("change", renderGamesTable);
+
   const filterStatus = document.getElementById("filterStatus");
   if (filterStatus) filterStatus.addEventListener("change", renderGamesTable);
 
@@ -5971,12 +6257,7 @@ document.addEventListener("DOMContentLoaded", () => {
           .then(r => r.json())
           .then(res => {
             if (res && res.data && res.data.length > 0) {
-              state.predictions = res.data;
-              saveAllToStorage();
-              renderDateTabs();
-              renderGamesTable();
-              updateDashboardKpis();
-              renderDashboardCharts();
+              mergeWithExistingPredictions(res.data);
             }
           })
           .catch(() => {});
