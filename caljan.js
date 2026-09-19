@@ -3391,7 +3391,7 @@ function getSeedData() {
   };
 }
 
-const CURRENT_DATA_VERSION = "2026-09-19-caljan-v13-scores-display";
+const CURRENT_DATA_VERSION = "2026-09-19-caljan-v14-live-api-scores";
 
 function initData() {
   const savedPredictions = localStorage.getItem(STORAGE_KEYS.PREDICTIONS);
@@ -4930,7 +4930,7 @@ function evaluatePrediction(prediction, homeScore, awayScore) {
 function normalizeTeamName(name) {
   if (!name) return "";
   return name.toLowerCase()
-    .replace(/fc|cf|sc|ac|afc|club|united|utd|city|town|wanderers/g, "")
+    .replace(/fc|cf|sc|ac|afc|club|united|utd|city|town|hotspur|wanderers|athletic/g, "")
     .replace(/[^a-z0-9]/g, "")
     .trim();
 }
@@ -4943,13 +4943,84 @@ function matchTeams(teamA, teamB) {
 }
 
 async function checkLiveResults(externalData = null) {
-  // 1. Evaluate all matches based on kickoff time and duration (Pending -> Live -> Won/Lost)
+  // 1. Initial clock progression
   updateTodayMatchesClock();
 
   let feedData = externalData;
 
-  // 2. If external live data or betika_live.json is available, check for score overrides
-  if (!feedData) {
+  // 2. Fetch REAL match scores from backend proxy or direct public live scoring feed
+  if (!feedData || !Array.isArray(feedData) || feedData.length === 0) {
+    const rawEvents = [];
+    const dateQuery = (state.selectedDate && state.selectedDate !== "ALL") ? state.selectedDate.replace(/-/g, "") : TODAY.replace(/-/g, "");
+
+    // 2a. Try Backend proxy /api/live-results
+    try {
+      const apiRes = await fetch(getApiUrl(`/api/live-results?date=${dateQuery}`));
+      if (apiRes.ok) {
+        const apiJson = await apiRes.json();
+        if (apiJson && Array.isArray(apiJson.data) && apiJson.data.length > 0) {
+          rawEvents.push(...apiJson.data);
+        }
+      }
+    } catch (e) {
+      console.warn("Backend /api/live-results fetch failed, trying direct public live feed:", e);
+    }
+
+    // 2b. Direct public live scores feed (Soccer & Basketball)
+    if (rawEvents.length === 0) {
+      try {
+        const [soccerRes, bballRes] = await Promise.allSettled([
+          fetch(`https://prod-public-api.livescore.com/v1/api/app/date/soccer/${dateQuery}/3`),
+          fetch(`https://prod-public-api.livescore.com/v1/api/app/date/basketball/${dateQuery}/3`)
+        ]);
+
+        const parseLiveScoreApi = (json, sport) => {
+          if (!json || !json.Stages) return;
+          json.Stages.forEach(s => {
+            (s.Events || []).forEach(e => {
+              const h = e.T1 && e.T1[0] ? e.T1[0].Nm : '';
+              const a = e.T2 && e.T2[0] ? e.T2[0].Nm : '';
+              if (h && a) {
+                const eps = (e.Eps || '').toUpperCase();
+                const isFinished = (eps === 'FT' || eps === 'AET' || eps === 'AP');
+                const isLive = (eps.includes("'") || eps === 'HT' || eps === 'LIVE' || eps.includes('Q'));
+                const hasScore = e.Tr1 !== undefined && e.Tr2 !== undefined;
+                if (hasScore || isLive || isFinished) {
+                  rawEvents.push({
+                    homeTeam: h,
+                    awayTeam: a,
+                    homeScore: parseInt(e.Tr1, 10),
+                    awayScore: parseInt(e.Tr2, 10),
+                    status: isFinished ? 'finished' : (isLive ? 'live' : 'pending'),
+                    liveMinute: e.Eps || (isFinished ? 'FT' : 'LIVE'),
+                    sport: sport
+                  });
+                }
+              }
+            });
+          });
+        };
+
+        if (soccerRes.status === "fulfilled" && soccerRes.value.ok) {
+          const sJson = await soccerRes.value.json();
+          parseLiveScoreApi(sJson, 'Soccer');
+        }
+        if (bballRes.status === "fulfilled" && bballRes.value.ok) {
+          const bJson = await bballRes.value.json();
+          parseLiveScoreApi(bJson, 'Basketball');
+        }
+      } catch (err) {
+        console.warn("Direct LiveScore API fetch restricted:", err);
+      }
+    }
+
+    if (rawEvents.length > 0) {
+      feedData = rawEvents;
+    }
+  }
+
+  // 3. Fallback to betika_live.json if no live score events were fetched
+  if (!feedData || feedData.length === 0) {
     try {
       const res = await fetch("./betika_live.json?t=" + Date.now());
       if (res.ok) {
@@ -4957,10 +5028,11 @@ async function checkLiveResults(externalData = null) {
         feedData = json.data || json;
       }
     } catch (e) {
-      console.warn("Could not auto-fetch live score feed:", e);
+      console.warn("Could not auto-fetch fallback feed:", e);
     }
   }
 
+  let realMatchUpdates = 0;
   if (feedData && Array.isArray(feedData)) {
     const nowStr = nowEatTime();
     feedData.forEach((item) => {
@@ -4976,7 +5048,10 @@ async function checkLiveResults(externalData = null) {
 
       if (!match) return;
 
-      const hasScores = (item.homeScore !== undefined || item.scoreHome !== undefined || item.home_score !== undefined);
+      const hasScores = (item.homeScore !== undefined && !isNaN(item.homeScore)) || 
+                        (item.scoreHome !== undefined && !isNaN(item.scoreHome)) || 
+                        (item.home_score !== undefined && !isNaN(item.home_score));
+
       const isFinished = item.status === "finished" || item.status === "FT" || item.is_finished === true;
       const isLiveNow = item.status === "live" || item.status === "in_play" || item.is_live === true;
 
@@ -4990,11 +5065,13 @@ async function checkLiveResults(externalData = null) {
           match.result = hScore + "-" + aScore + " FT";
           match.liveMinute = "FT";
           match.checkedAt = nowStr;
+          realMatchUpdates++;
         } else if (isLiveNow) {
           match.status = "Live";
           match.result = hScore + "-" + aScore;
-          match.liveMinute = item.minute || item.liveMinute || "LIVE";
+          match.liveMinute = item.liveMinute || item.minute || "LIVE";
           match.checkedAt = nowStr;
+          realMatchUpdates++;
         }
       }
     });
@@ -5013,7 +5090,8 @@ async function checkLiveResults(externalData = null) {
   const lostCount = dayMatches.filter(m => m.status === "Lost").length;
   const pendingCount = dayMatches.filter(m => m.status === "Pending").length;
 
-  showToast("Matches Checked & Updated", `${targetDate}: ${pendingCount} Pending, ${liveCount} Live, ${wonCount + lostCount} Settled. All games updated!`, "success");
+  const realMsg = realMatchUpdates > 0 ? ` (${realMatchUpdates} matches verified via Real Live Scores API)` : "";
+  showToast("Matches Checked & Updated", `${targetDate}: ${pendingCount} Pending, ${liveCount} Live, ${wonCount + lostCount} Settled${realMsg}. All games updated!`, "success");
 }
 
 // SIMULATOR 1: Live Kick-off
@@ -6246,10 +6324,19 @@ document.addEventListener("DOMContentLoaded", () => {
               mergeWithExistingPredictions(res.data);
             }
           })
-          .catch(() => {});
+          .catch(() => {})
+          .finally(() => {
+            // Automatically fetch real live match scores via API
+            setTimeout(() => checkLiveResults(), 1000);
+          });
+      } else {
+        // Automatically fetch real live match scores via API in client mode
+        setTimeout(() => checkLiveResults(), 1000);
       }
     })
     .catch(() => {
       console.log("CALJAN running in client-only mode or backend initializing.");
+      // Automatically fetch real live match scores via API
+      setTimeout(() => checkLiveResults(), 1000);
     });
 });

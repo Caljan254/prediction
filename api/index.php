@@ -503,10 +503,85 @@ if ($route === 'tickets') {
 }
 
 // -------------------------------------------------------------
+// Route: /api/live-results (GET) — Pulls REAL live and FT match scores
+// -------------------------------------------------------------
+if ($route === 'live-results' && $method === 'GET') {
+    $dateParam = $_GET['date'] ?? date('Ymd');
+    $cleanDate = str_replace('-', '', $dateParam);
+
+    function fetchLiveFeed($url) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $res = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($code === 200 && !empty($res)) {
+            return json_decode($res, true);
+        }
+        return null;
+    }
+
+    $soccerUrl = "https://prod-public-api.livescore.com/v1/api/app/date/soccer/{$cleanDate}/3";
+    $bballUrl = "https://prod-public-api.livescore.com/v1/api/app/date/basketball/{$cleanDate}/3";
+
+    $soccerJson = fetchLiveFeed($soccerUrl);
+    $bballJson = fetchLiveFeed($bballUrl);
+
+    $results = [];
+    $parseFeed = function($json, $sport) use (&$results) {
+        if (!$json || empty($json['Stages'])) return;
+        foreach ($json['Stages'] as $s) {
+            $leagueName = $s['Snm'] ?? '';
+            $events = $s['Events'] ?? [];
+            foreach ($events as $e) {
+                $home = $e['T1'][0]['Nm'] ?? '';
+                $away = $e['T2'][0]['Nm'] ?? '';
+                if (empty($home) || empty($away)) continue;
+
+                $eps = strtoupper($e['Eps'] ?? '');
+                $isFinished = ($eps === 'FT' || $eps === 'AET' || $eps === 'AP');
+                $isLive = (strpos($eps, "'") !== false || $eps === 'HT' || $eps === 'LIVE' || strpos($eps, 'Q') !== false);
+
+                $hScore = isset($e['Tr1']) ? (int)$e['Tr1'] : null;
+                $aScore = isset($e['Tr2']) ? (int)$e['Tr2'] : null;
+
+                if ($hScore !== null || $isFinished || $isLive) {
+                    $results[] = [
+                        'homeTeam' => $home,
+                        'awayTeam' => $away,
+                        'homeScore' => $hScore,
+                        'awayScore' => $aScore,
+                        'status' => $isFinished ? 'finished' : ($isLive ? 'live' : 'pending'),
+                        'liveMinute' => $e['Eps'] ?? ($isFinished ? 'FT' : 'LIVE'),
+                        'sport' => $sport,
+                        'competition' => $leagueName
+                    ];
+                }
+            }
+        }
+    };
+
+    $parseFeed($soccerJson, 'Soccer');
+    $parseFeed($bballJson, 'Basketball');
+
+    sendJsonResponse([
+        'success' => true,
+        'count' => count($results),
+        'date' => $cleanDate,
+        'data' => $results
+    ]);
+}
+
+// -------------------------------------------------------------
 // Default 404 handler for unmatched routes
 // -------------------------------------------------------------
 sendJsonResponse([
     'success' => false,
     'error' => "Endpoint not found: {$route}",
-    'availableEndpoints' => ['status', 'status/apis', 'matches', 'sync', 'auth/login', 'tickets', 'sources']
+    'availableEndpoints' => ['status', 'status/apis', 'matches', 'sync', 'live-results', 'auth/login', 'tickets', 'sources']
 ], 404);
