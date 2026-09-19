@@ -3391,7 +3391,7 @@ function getSeedData() {
   };
 }
 
-const CURRENT_DATA_VERSION = "2026-09-16-caljan-v10-real-livescores";
+const CURRENT_DATA_VERSION = "2026-09-19-caljan-v12-persistent-live";
 
 function initData() {
   const savedPredictions = localStorage.getItem(STORAGE_KEYS.PREDICTIONS);
@@ -4935,9 +4935,12 @@ function matchTeams(teamA, teamB) {
 }
 
 async function checkLiveResults(externalData = null) {
+  // 1. Evaluate all matches based on kickoff time and duration (Pending -> Live -> Won/Lost)
+  updateTodayMatchesClock();
+
   let feedData = externalData;
 
-  // 1. If no external data passed directly, attempt to fetch live scores feed
+  // 2. If external live data or betika_live.json is available, check for score overrides
   if (!feedData) {
     try {
       const res = await fetch("./betika_live.json?t=" + Date.now());
@@ -4951,9 +4954,7 @@ async function checkLiveResults(externalData = null) {
   }
 
   if (feedData && Array.isArray(feedData)) {
-    let updatedCount = 0;
     const nowStr = nowEatTime();
-
     feedData.forEach((item) => {
       const homeName = item.homeTeam || item.home_team || item.home || "";
       const awayName = item.awayTeam || item.away_team || item.away || "";
@@ -4967,7 +4968,6 @@ async function checkLiveResults(externalData = null) {
 
       if (!match) return;
 
-      // Extract scores if present in feed
       const hasScores = (item.homeScore !== undefined || item.scoreHome !== undefined || item.home_score !== undefined);
       const isFinished = item.status === "finished" || item.status === "FT" || item.is_finished === true;
       const isLiveNow = item.status === "live" || item.status === "in_play" || item.is_live === true;
@@ -4982,62 +4982,30 @@ async function checkLiveResults(externalData = null) {
           match.result = hScore + "-" + aScore + " FT";
           match.liveMinute = "FT";
           match.checkedAt = nowStr;
-          updatedCount++;
         } else if (isLiveNow) {
           match.status = "Live";
           match.result = hScore + "-" + aScore;
           match.liveMinute = item.minute || item.liveMinute || "LIVE";
           match.checkedAt = nowStr;
-          updatedCount++;
         }
       }
     });
-
-    if (updatedCount > 0) {
-      saveAllToStorage();
-      autoUpdateTickets();
-      renderGamesTable();
-      updateDashboardKpis();
-      renderDashboardCharts();
-      showToast("Live Scores Updated", "Updated " + updatedCount + " matches with live scores and statuses.", "success");
-      return;
-    }
   }
 
-  // If no external finished matches matched yet, simulate active in-play progress for pending games
+  saveAllToStorage();
+  autoUpdateTickets();
+  renderGamesTable();
+  updateDashboardKpis();
+  renderDashboardCharts();
+
   const targetDate = state.selectedDate === "ALL" ? TODAY : state.selectedDate;
-  const pendings = state.predictions.filter((m) => m.status === "Pending" && (m.date === targetDate || !m.date));
-  const activeLives = state.predictions.filter((m) => m.status === "Live" && (m.date === targetDate || !m.date));
+  const dayMatches = state.predictions.filter(m => m.date === targetDate);
+  const liveCount = dayMatches.filter(m => m.status === "Live").length;
+  const wonCount = dayMatches.filter(m => m.status === "Won").length;
+  const lostCount = dayMatches.filter(m => m.status === "Lost").length;
+  const pendingCount = dayMatches.filter(m => m.status === "Pending").length;
 
-  if (activeLives.length > 0) {
-    // Progress some live matches to FT
-    let settled = 0;
-    activeLives.slice(0, 2).forEach((m) => {
-      const parts = (m.result || "1-1").split("-");
-      const h = parseInt(parts[0], 10) || 1;
-      const a = parseInt(parts[1], 10) || 1;
-      const isWon = evaluatePrediction(m.prediction, h, a);
-      m.status = isWon ? "Won" : "Lost";
-      m.result = h + "-" + a + " FT";
-      m.liveMinute = "FT";
-      m.checkedAt = nowEatTime();
-      settled++;
-    });
-
-    saveAllToStorage();
-    autoUpdateTickets();
-    renderGamesTable();
-    updateDashboardKpis();
-    renderDashboardCharts();
-    showToast("Live Scores Progressed", settled + " in-play games reached Final Whistle (FT).", "success");
-  } else if (pendings.length > 0) {
-    // Start live games if currently 0 are live
-    simulateLiveMatches();
-  } else {
-    renderGamesTable();
-    updateDashboardKpis();
-    showToast("Scores Up to Date", "All matches for " + targetDate + " are verified and recorded.", "info");
-  }
+  showToast("Matches Checked & Updated", `${targetDate}: ${pendingCount} Pending, ${liveCount} Live, ${wonCount + lostCount} Settled. All games updated!`, "success");
 }
 
 // SIMULATOR 1: Live Kick-off
