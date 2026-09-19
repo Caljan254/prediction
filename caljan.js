@@ -3979,7 +3979,9 @@ function renderGamesTable() {
       <td><span class="league-pill">${leagueIcon}${cleanLeague}</span>${weatherBadge}</td>
       <td><span class="team-name">${match.homeTeam}</span>${homeInjuryBadge}</td>
       <td><span class="team-name">${match.awayTeam}</span>${awayInjuryBadge}</td>
-      <td><span class="pred-badge">${match.prediction}</span></td>
+      <td>${isBasketball || (match.predictionType && match.predictionType.includes("Total"))
+        ? `<span class="pred-badge" style="background: rgba(245, 158, 11, 0.15); border-color: #f59e0b; color: #f59e0b; padding: 4px 8px; display: inline-block;" title="Market: Total (Incl. Overtime)">🏀 ${match.prediction}<small style="display:block;font-size:0.7em;font-weight:600;opacity:0.9;">Total (Incl. OT)</small></span>`
+        : `<span class="pred-badge">${match.prediction}</span>`}</td>
       <td><span class="badge-confidence ${confClass}">${match.confidence}</span></td>
       <td><small class="text-muted">${match.sources || "CALJAN AI"}</small></td>
       <td><span class="odds-tag" title="${oddsDetails}">${Number(match.odds).toFixed(2)}</span></td>
@@ -4128,26 +4130,34 @@ function setupAddMatchModal() {
       const sources = document.getElementById("newSources").value.trim() || "CALJAN AI";
       const odds = parseFloat(document.getElementById("newOdds").value);
 
+      const isBball = prediction.includes("Total") || league.toLowerCase().includes("basketball") || league.includes("🏀");
+      const cleanLg = league.replace(/^🏀\s*/, "");
+
       const newMatch = {
         id: "caljan-custom-" + Date.now(),
         betikaGameId: "" + Math.floor(10000 + Math.random() * 90000),
         matchId: "" + Math.floor(10000000 + Math.random() * 90000000),
+        sport: isBball ? "Basketball" : "Soccer",
         time: time,
         date: date,
-        league: league,
+        league: (isBball ? "🏀 " : "") + cleanLg,
         homeTeam: homeTeam,
         awayTeam: awayTeam,
         prediction: prediction,
+        predictionType: isBball ? "Total (Incl. Overtime)" : "1X2",
         confidence: confidence,
         sources: sources,
         odds: odds,
+        totalLine: isBball ? (prediction.replace(/[^0-9.]/g, '') || "175.5") : null,
+        overOdd: isBball ? odds : null,
+        underOdd: isBball ? odds : null,
         status: "Pending",
         result: null,
         liveMinute: null,
         checkedAt: null,
         betikaOdds: {
           home: odds,
-          draw: 3.40,
+          draw: isBball ? 18.0 : 3.40,
           away: parseFloat((odds * 1.5).toFixed(2))
         },
         analysis: generateDefaultAnalysis(homeTeam, awayTeam, prediction)
@@ -4620,7 +4630,7 @@ function renderTicketBuilder() {
         <div>
           <div class="match-summary-names" style="font-weight:600; font-size:13.5px;">${m.homeTeam} vs ${m.awayTeam}</div>
           <div class="match-summary-pred" style="font-size:12px; color:var(--text-muted);">
-            <span class="badge badge-accent">${m.prediction}</span> &bull; ${m.league} &bull; ${m.time}
+            <span class="badge ${m.sport === 'Basketball' || (m.predictionType && m.predictionType.includes('Total')) ? 'badge-warning' : 'badge-accent'}">${m.sport === 'Basketball' || (m.predictionType && m.predictionType.includes('Total')) ? '🏀 ' : ''}${m.prediction}</span> &bull; ${m.league} &bull; ${m.time}
           </div>
         </div>
       </div>
