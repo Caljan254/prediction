@@ -36,6 +36,14 @@ function nowEatTime() {
   return new Intl.DateTimeFormat('en-GB', { timeZone: 'Africa/Nairobi', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date());
 }
 
+// Helper to construct API URL supporting both hosted and direct file:// loading
+function getApiUrl(path) {
+  if (window.location.protocol === 'file:') {
+    return 'http://localhost:5000' + path;
+  }
+  return path;
+}
+
 // CALJAN Daily Fixtures (133 matches: 36 Today, 97 Historical Settled)
 const CALJAN_DAILY_FIXTURES = [
   {
@@ -3720,7 +3728,7 @@ function renderApiStatusPanel() {
     newsApi: "NewsAPI.org"
   };
 
-  fetch("/api/status/apis")
+  fetch(getApiUrl("/api/status/apis"))
     .then((r) => r.json())
     .then((res) => {
       if (!res || !res.success) throw new Error("bad response");
@@ -5618,14 +5626,14 @@ async function syncRealBetikaGames(parsedData = null) {
     if (!rawMatches) {
       // 0. Attempt fetch from Node.js Backend Server API (/api/sync)
       try {
-        const backendRes = await fetch("/api/sync", {
+        const backendRes = await fetch(getApiUrl("/api/sync"), {
           method: "POST",
           headers: { "Content-Type": "application/json" }
         });
         if (backendRes.ok) {
           const backendData = await backendRes.json();
           if (backendData && backendData.success) {
-            const matchesRes = await fetch("/api/matches");
+            const matchesRes = await fetch(getApiUrl("/api/matches"));
             if (matchesRes.ok) {
               const matchesJson = await matchesRes.json();
               if (matchesJson && matchesJson.data && matchesJson.data.length > 0) {
@@ -5948,7 +5956,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderApiStatusPanel();
 
   // Check Node.js Backend Server Status & Sync Data
-  fetch("/api/status")
+  fetch(getApiUrl("/api/status"))
     .then(r => r.json())
     .then(statusData => {
       if (statusData && statusData.success) {
@@ -5959,7 +5967,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (headerText) headerText.innerHTML = '<strong class="text-accent"><i class="fa-brands fa-node-js"></i> API: Node.js Online</strong>';
 
         // Fetch matches from Node backend if available
-        fetch("/api/matches")
+        fetch(getApiUrl("/api/matches"))
           .then(r => r.json())
           .then(res => {
             if (res && res.data && res.data.length > 0) {

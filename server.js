@@ -9,7 +9,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
-const sqlite3 = require('sqlite3').verbose();
 
 const { getStatusReport } = require('./config/apiKeys');
 const apiAggregator = require('./services/apiAggregator');
@@ -25,7 +24,7 @@ const { analyzeFactorPredictivePower } = require('./services/factorAnalytics');
 const { startScheduler } = require('./services/scheduler');
 
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = parseInt(process.env.PORT, 10) || 8000;
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'database', 'betika_hub.sqlite');
 const BETIKA_API_URL = process.env.BETIKA_API_URL || 'https://api.betika.com/v1/uo/matches?tab=today&sport_id=14';
 
@@ -35,28 +34,48 @@ if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
 }
 
-// Initialize SQLite Database
-const db = new sqlite3.Database(DB_PATH, (err) => {
-  if (err) {
-    console.error('Failed to open database:', err.message);
-  } else {
-    console.log(`Connected to SQLite database at: ${DB_PATH}`);
+// Initialize SQLite Database (supports sqlite3 package or Node.js built-in node:sqlite)
+let dbQuery;
+try {
+  const sqlite3 = require('sqlite3').verbose();
+  const db = new sqlite3.Database(DB_PATH, (err) => {
+    if (err) throw err;
+    console.log(`Connected to SQLite database via sqlite3 at: ${DB_PATH}`);
     initDatabase();
-  }
-});
-
-// Helper for promise-based db queries
-const dbQuery = {
-  all: (sql, params = []) => new Promise((res, rej) => {
-    db.all(sql, params, (err, rows) => err ? rej(err) : res(rows));
-  }),
-  get: (sql, params = []) => new Promise((res, rej) => {
-    db.get(sql, params, (err, row) => err ? rej(err) : res(row));
-  }),
-  run: (sql, params = []) => new Promise((res, rej) => {
-    db.run(sql, params, function (err) { err ? rej(err) : res(this); });
-  })
-};
+  });
+  dbQuery = {
+    all: (sql, params = []) => new Promise((res, rej) => {
+      db.all(sql, params, (err, rows) => err ? rej(err) : res(rows));
+    }),
+    get: (sql, params = []) => new Promise((res, rej) => {
+      db.get(sql, params, (err, row) => err ? rej(err) : res(row));
+    }),
+    run: (sql, params = []) => new Promise((res, rej) => {
+      db.run(sql, params, function (err) { err ? rej(err) : res({ lastID: this.lastID, changes: this.changes }); });
+    })
+  };
+} catch (nativeErr) {
+  // Built-in node:sqlite for Node v22.5+ (no native C++ compilation required)
+  const { DatabaseSync } = require('node:sqlite');
+  console.log(`Connected to SQLite database via built-in node:sqlite at: ${DB_PATH}`);
+  const syncDb = new DatabaseSync(DB_PATH);
+  dbQuery = {
+    all: async (sql, params = []) => {
+      const stmt = syncDb.prepare(sql);
+      return stmt.all(...params);
+    },
+    get: async (sql, params = []) => {
+      const stmt = syncDb.prepare(sql);
+      return stmt.get(...params);
+    },
+    run: async (sql, params = []) => {
+      const stmt = syncDb.prepare(sql);
+      const info = stmt.run(...params);
+      return { lastID: info.lastInsertRowid, changes: info.changes };
+    }
+  };
+  setImmediate(() => initDatabase());
+}
 
 // Let apiAggregator persist/read its response cache through the same SQLite connection
 apiAggregator.attachDatabase(dbQuery);
@@ -632,6 +651,16 @@ app.post('/api/sync', async (req, res) => {
   }
 });
 
+// 7b. Generate Predictions on-demand
+app.post('/api/predictions/generate', async (req, res) => {
+  try {
+    const result = await generateDailyPredictions(dbQuery);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // 8. Accumulator Tickets Endpoints
 app.get('/api/tickets', async (req, res) => {
   try {
@@ -830,13 +859,27 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Start Server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`=======================================================`);
-  console.log(` CALJAN - Football Prediction Intelligence System `);
-  console.log(` Server running on http://localhost:${PORT}`);
-  console.log(` Real Betika Sync, REST API & Frontend Active `);
-  console.log(`=======================================================`);
-});
+// Start Server with graceful fallback if port is already in use
+function startServer(targetPort) {
+  const server = app.listen(targetPort, '0.0.0.0', () => {
+    console.log(`=======================================================`);
+    console.log(` CALJAN - Football Prediction Intelligence System `);
+    console.log(` Server running on http://localhost:${targetPort}`);
+    console.log(` Real Betika Sync, REST API & Frontend Active `);
+    console.log(`=======================================================`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      const nextPort = targetPort === 8000 ? 8080 : targetPort + 1;
+      console.warn(`[CALJAN] Port ${targetPort} is already in use. Retrying on port ${nextPort}...`);
+      startServer(nextPort);
+    } else {
+      console.error('[CALJAN] Server error:', err);
+    }
+  });
+}
+
+startServer(PORT);
 
 module.exports = app;
