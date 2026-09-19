@@ -1,0 +1,22 @@
+<?php
+/**
+ * InfinityFree MySQL Database Configuration Template
+ * 
+ * Instructions:
+ * 1. Log into your InfinityFree Control Panel (VistaPanel).
+ * 2. Click "MySQL Databases" and create a database (e.g. betika_hub).
+ * 3. Copy this file to "config.local.php" in this same /api folder.
+ * 4. Fill in your actual InfinityFree MySQL details below.
+ */
+
+return [
+    'db_host' => 'sqlxxx.infinityfree.com', // e.g. sql102.infinityfree.com
+    'db_port' => '3306',
+    'db_name' => 'if0_xxxxxxxxx_betika_hub', // Full database name shown in vPanel
+    'db_user' => 'if0_xxxxxxxxx',            // Your vPanel username
+    'db_pass' => 'your_vpanel_password',     // Your vPanel account password
+    'charset' => 'utf8mb4',
+
+    'admin_user' => 'caljan',
+    'admin_pass' => 'Caljan@2024'
+];

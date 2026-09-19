@@ -23,8 +23,8 @@ $default_config = [
     'db_user' => 'root',
     'db_pass' => 'Aaamumo254%',
     'charset' => 'utf8mb4',
-    'admin_user' => 'Admin',
-    'admin_pass' => 'Admin@123_',
+    'admin_user' => 'caljan',
+    'admin_pass' => 'Caljan@2024',
     'betika_api_base' => 'https://api.betika.com/v1/uo/matches',
     'cache_duration' => 300 // 5 minutes cache
 ];
