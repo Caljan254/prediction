@@ -12,3 +12,11 @@ Thumbs.db
 
 # Log files
 *.log
+
+# Dependencies & Environment
+node_modules/
+.env
+*.sqlite
+
+# Raw API key notes (secrets)
+api_key.md
