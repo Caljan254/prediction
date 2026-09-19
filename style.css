@@ -829,6 +829,7 @@ a:hover { text-decoration: underline; }
 .status-live { background: var(--status-live-bg); color: var(--status-live); animation: liveTextPulse 1.2s ease-in-out infinite; }
 .status-won { background: var(--status-won-bg); color: var(--status-won); }
 .status-lost { background: var(--status-lost-bg); color: var(--status-lost); }
+.status-unverified { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); }
 
 @keyframes liveTextPulse {
   0%, 100% { opacity: 1; }
@@ -1575,3 +1576,132 @@ code {
 }
 
 .storage-meta { display: flex; align-items: center; gap: 8px; }
+
+/* ==========================================================================
+   PHASE 4 — Dashboard Enhancement additions
+   ========================================================================== */
+
+/* Live API Status panel (API & Data tab) */
+.api-status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+.api-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  font-size: 13px;
+}
+.api-status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.api-status-dot.on { background: var(--status-won); box-shadow: 0 0 6px var(--status-won); }
+.api-status-dot.off { background: var(--status-lost); }
+.api-status-name { color: var(--text-main); font-weight: 600; }
+.api-status-sub { color: var(--text-muted); font-size: 11px; margin-left: auto; }
+
+/* Match-row weather / countdown / injury badges */
+.weather-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+.countdown-badge {
+  display: block;
+  font-size: 11px;
+  color: var(--accent-gold);
+  margin-top: 2px;
+}
+.injury-badge {
+  display: inline-block;
+  font-size: 10px;
+  color: var(--status-lost);
+  margin-left: 4px;
+  cursor: help;
+}
+
+/* Factor radar chart tab */
+.factors-radar-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+}
+.factors-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 6px;
+  margin-top: 16px;
+}
+.factors-legend-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  font-size: 12px;
+}
+.factors-legend-item.unavailable { opacity: 0.45; }
+.factors-legend-item .fl-name { color: var(--text-main); }
+.factors-legend-item .fl-weight { color: var(--text-muted); }
+
+/* Match-analysis modal — classes actually emitted by openMatchAnalysisModal()
+   (a separate, unused parallel design exists above under different class names) */
+.h2h-stat-box { display: flex; flex-direction: column; align-items: center; }
+.h2h-num { font-size: 28px; font-weight: 900; display: block; }
+.h2h-lbl { font-size: 11px; color: var(--text-muted); }
+.h2h-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.h2h-teams { color: var(--text-main); }
+.h2h-score-badge { font-family: var(--font-mono); font-weight: 700; color: var(--accent-gold); }
+
+.form-team-card { background: var(--bg-input); border-radius: var(--radius-md); padding: 14px; }
+.form-team-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.form-pills-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.form-pill {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+}
+.pill-win { background: var(--status-won-bg); color: var(--status-won); }
+.pill-draw { background: var(--status-pending-bg); color: var(--status-pending); }
+.pill-loss { background: var(--status-lost-bg); color: var(--status-lost); }
+
+.squad-card { background: var(--bg-input); border-radius: var(--radius-md); padding: 14px; }
+.squad-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.squad-card ul { margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--text-muted); line-height: 1.7; }
+
+.sentiment-metrics-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; text-align: center; }
+.sent-box { background: var(--bg-input); border-radius: var(--radius-md); padding: 14px; }
+.sent-pct { font-size: 24px; font-weight: 900; display: block; }
+.sent-lbl { font-size: 11px; color: var(--text-muted); }
+.sentiment-quotes { display: flex; flex-direction: column; gap: 8px; }
+.quote-card { background: var(--bg-input); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12.5px; border-left: 3px solid var(--primary); }
+.quote-card strong { display: block; margin-bottom: 4px; color: var(--text-main); }
+
+.analyst-pick-card { background: var(--bg-input); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 8px; }
+.analyst-pick-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.analyst-note { font-size: 12.5px; color: var(--text-muted); margin: 0; }

@@ -23,15 +23,18 @@ const STORAGE_KEYS = {
 const ADMIN_USER = "caljan";
 const ADMIN_PASS = "Caljan@2024";
 
-// Today's Date Constant
+// Today's Date Constant (EAT/Africa-Nairobi, matching the backend's timezone convention)
 function getTodayDate() {
-  const d = new Date();
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return year + "-" + month + "-" + day;
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Nairobi', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
 }
-const TODAY = "2026-09-16";
+const TODAY = getTodayDate();
+
+// "Checked at HH:mm" timestamps must show EAT regardless of the viewer's own browser timezone —
+// otherwise an admin browsing from outside Kenya would see times inconsistent with every other
+// EAT-based date/time in the app.
+function nowEatTime() {
+  return new Intl.DateTimeFormat('en-GB', { timeZone: 'Africa/Nairobi', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date());
+}
 
 // CALJAN Daily Fixtures (133 matches: 36 Today, 97 Historical Settled)
 const CALJAN_DAILY_FIXTURES = [
@@ -3579,6 +3582,12 @@ function setupDateNavigation() {
   }
 }
 
+function addDaysToIsoDate(isoDate, days) {
+  const d = new Date(isoDate + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 function renderDateTabs() {
   const container = document.getElementById("dateTabsContainer");
   if (!container) return;
@@ -3586,6 +3595,9 @@ function renderDateTabs() {
   const datesSet = new Set(state.predictions.map(p => p.date).filter(Boolean));
   datesSet.add(TODAY);
   const availableDates = Array.from(datesSet).sort().reverse();
+
+  const tomorrowStr = addDaysToIsoDate(TODAY, 1);
+  const yesterdayStr = addDaysToIsoDate(TODAY, -1);
 
   let html = "";
   availableDates.forEach(d => {
@@ -3599,14 +3611,13 @@ function renderDateTabs() {
       mainLabel = "Today's Games (" + d + ")";
       subLabel = count + " Real Betika Matches";
       icon = '<i class="fa-solid fa-star text-gold" style="margin-right: 4px;"></i>';
-    } else if (d === "2026-09-15") {
-      mainLabel = "Yesterday (Sep 15)";
+    } else if (d === tomorrowStr) {
+      mainLabel = "Tomorrow (" + d + ")";
+      subLabel = count + " Upcoming Matches";
+    } else if (d === yesterdayStr) {
+      mainLabel = "Yesterday (" + d + ")";
       subLabel = count + " Settled Matches";
-    } else if (d === "2026-09-14") {
-      mainLabel = "Sep 14";
-      subLabel = count + " Settled Matches";
-    } else if (d === "2026-09-13") {
-      mainLabel = "Sep 13";
+    } else if (d < TODAY) {
       subLabel = count + " Settled Matches";
     }
 
@@ -3680,8 +3691,63 @@ function setupNavigation() {
         renderSourcesTable();
         populateSourceMatchDropdown();
       }
+      if (targetId === "tab-settings") {
+        renderApiStatusPanel();
+      }
     });
   });
+}
+
+// ==========================================================================
+// PHASE 4: LIVE API STATUS PANEL (12 backend data sources)
+// ==========================================================================
+function renderApiStatusPanel() {
+  const grid = document.getElementById("apiStatusGrid");
+  if (!grid) return;
+
+  const SOURCE_LABELS = {
+    apiFootball: "API-Football",
+    footballDataOrg: "Football-Data.org",
+    sportmonks: "Sportmonks",
+    theSportsDb: "TheSportsDB",
+    openLigaDb: "OpenLigaDB",
+    betika: "Betika Live API",
+    statsBomb: "StatsBomb Open Data",
+    openMeteo: "Open-Meteo",
+    weatherApi: "WeatherAPI.com",
+    oddsApi: "The Odds API",
+    reddit: "Reddit",
+    newsApi: "NewsAPI.org"
+  };
+
+  fetch("/api/status/apis")
+    .then((r) => r.json())
+    .then((res) => {
+      if (!res || !res.success) throw new Error("bad response");
+      grid.innerHTML = res.data.map((s) => `
+        <div class="api-status-pill">
+          <span class="api-status-dot ${s.configured ? "on" : "off"}"></span>
+          <span class="api-status-name">${SOURCE_LABELS[s.source] || s.source}</span>
+          <span class="api-status-sub">${s.configured ? "Ready" : "No key"}</span>
+        </div>
+      `).join("");
+    })
+    .catch(() => {
+      grid.innerHTML = '<p class="text-danger">Could not reach the Node.js backend to check API status.</p>';
+    });
+}
+
+// Kickoff countdown ("Starts in 2h 15m"), matching the backend's EAT (UTC+3) wall-clock convention.
+function formatCountdown(dateStr, timeStr) {
+  if (!dateStr || !timeStr) return null;
+  const kickoff = new Date(`${dateStr}T${timeStr}:00+03:00`).getTime();
+  const diffMs = kickoff - Date.now();
+  if (diffMs <= 0) return null;
+  const diffMin = Math.floor(diffMs / 60000);
+  const h = Math.floor(diffMin / 60);
+  const m = diffMin % 60;
+  if (h > 48) return null;
+  return h > 0 ? `Starts in ${h}h ${m}m` : `Starts in ${m}m`;
 }
 
 // ==========================================================================
@@ -3717,7 +3783,8 @@ function renderGamesTable() {
   const subtitleEl = document.getElementById("todayDateDisplay");
   if (subtitleEl) {
     if (activeDate === TODAY) {
-      subtitleEl.textContent = "Wednesday, September 16, 2026 • " + filtered.length + " Real Betika Daily Matches (Awaiting Kick-off)";
+      const formattedToday = new Date(activeDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+      subtitleEl.textContent = formattedToday + " • " + filtered.length + " Real Betika Daily Matches (Awaiting Kick-off)";
     } else if (activeDate === "ALL") {
       subtitleEl.textContent = "Showing all " + filtered.length + " CALJAN match predictions across all dates";
     } else {
@@ -3808,10 +3875,16 @@ function renderGamesTable() {
       statusClass = "status-lost";
       statusIcon = '<i class="fa-solid fa-circle-xmark"></i>';
       statusLabel = "Lost";
+    } else if (match.status === "Unverified") {
+      statusClass = "status-unverified";
+      statusIcon = '<i class="fa-solid fa-circle-question"></i>';
+      statusLabel = "Unverified";
     }
 
     let resultDisplay = '<span class="score-pending" title="Awaiting Kick-off">—</span>';
-    if (match.status === "Live") {
+    if (match.status === "Unverified") {
+      resultDisplay = '<span class="score-pending" title="Kickoff has passed but no connected data source covers this league yet">?</span>';
+    } else if (match.status === "Live") {
       const min = match.liveMinute || "LIVE";
       const scoreText = match.result || "0-0";
       resultDisplay = '<span class="score-cell score-live" title="In-Play: ' + scoreText + '">' + scoreText + ' <span class="minute">' + min + '</span></span>';
@@ -3828,11 +3901,24 @@ function renderGamesTable() {
 
     const inSlip = state.activeSlipMatches.some(m => m.id === match.id);
 
+    const weather = match.analysis && match.analysis.weather;
+    const weatherBadge = weather
+      ? `<span class="weather-badge" title="${weather.notes || ""}"><i class="fa-solid fa-cloud-sun"></i> ${Math.round(weather.temperatureC)}&deg;C</span>`
+      : "";
+
+    const countdownText = match.status === "Pending" ? formatCountdown(match.date, match.time) : null;
+    const countdownBadge = countdownText ? `<span class="countdown-badge">${countdownText}</span>` : "";
+
+    const homeInjuries = match.analysis && match.analysis.homeSquadOut;
+    const awayInjuries = match.analysis && match.analysis.awaySquadOut;
+    const homeInjuryBadge = homeInjuries ? `<i class="fa-solid fa-truck-medical injury-badge" title="${homeInjuries.join(' ')}"></i>` : "";
+    const awayInjuryBadge = awayInjuries ? `<i class="fa-solid fa-truck-medical injury-badge" title="${awayInjuries.join(' ')}"></i>` : "";
+
     tr.innerHTML = `
-      <td><span class="match-time">${match.time || "TBD"}</span><span class="match-date-badge">${match.date || ""}</span></td>
-      <td><span class="league-pill">${match.league || "Football"}</span></td>
-      <td><span class="team-name">${match.homeTeam}</span></td>
-      <td><span class="team-name">${match.awayTeam}</span></td>
+      <td><span class="match-time">${match.time || "TBD"}</span><span class="match-date-badge">${match.date || ""}</span>${countdownBadge}</td>
+      <td><span class="league-pill">${match.league || "Football"}</span>${weatherBadge}</td>
+      <td><span class="team-name">${match.homeTeam}</span>${homeInjuryBadge}</td>
+      <td><span class="team-name">${match.awayTeam}</span>${awayInjuryBadge}</td>
       <td><span class="pred-badge">${match.prediction}</span></td>
       <td><span class="badge-confidence ${confClass}">${match.confidence}</span></td>
       <td><small class="text-muted">${match.sources || "CALJAN AI"}</small></td>
@@ -3899,7 +3985,7 @@ function editMatchScore(matchId) {
     match.liveMinute = parts[1] || "55'";
   }
 
-  match.checkedAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  match.checkedAt = nowEatTime();
   saveAllToStorage();
   autoUpdateTickets();
   renderGamesTable();
@@ -3916,7 +4002,7 @@ function quickMarkStatus(matchId, status) {
     match.result = status === "Won" ? "2-1 FT" : "0-1 FT";
   }
   match.liveMinute = "FT";
-  match.checkedAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  match.checkedAt = nowEatTime();
   saveAllToStorage();
   autoUpdateTickets();
   renderGamesTable();
@@ -4211,7 +4297,69 @@ function openMatchAnalysisModal(matchId) {
     `).join("");
   }
 
+  // Tab 7: 11-Factor Breakdown (radar chart)
+  renderFactorsRadar(analysis.factors);
+
   modal.classList.remove("hidden");
+}
+
+function renderFactorsRadar(factors) {
+  const canvas = document.getElementById("factorsRadarChart");
+  const legend = document.getElementById("factorsLegend");
+  if (!canvas) return;
+
+  if (state.charts.factorsRadar) {
+    state.charts.factorsRadar.destroy();
+    state.charts.factorsRadar = null;
+  }
+
+  if (!factors || !Array.isArray(factors) || typeof Chart === "undefined") {
+    if (legend) legend.innerHTML = '<p class="text-muted">Run "Generate Predictions" on this match to see its 11-factor breakdown.</p>';
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
+  const labels = factors.map((f) => f.label);
+  const values = factors.map((f) => (f.dataAvailable ? Math.round(50 + f.lean * 50) : 50));
+
+  state.charts.factorsRadar = new Chart(ctx, {
+    type: "radar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Home <- 50 -> Away lean",
+        data: values,
+        backgroundColor: "rgba(59, 130, 246, 0.2)",
+        borderColor: "#3b82f6",
+        pointBackgroundColor: factors.map((f) => (f.dataAvailable ? "#3b82f6" : "#475569")),
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          min: 0,
+          max: 100,
+          ticks: { display: false, stepSize: 25 },
+          grid: { color: "rgba(255,255,255,0.08)" },
+          angleLines: { color: "rgba(255,255,255,0.08)" },
+          pointLabels: { color: "#94a3b8", font: { size: 10 } }
+        }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  if (legend) {
+    legend.innerHTML = factors.map((f) => `
+      <div class="factors-legend-item ${f.dataAvailable ? "" : "unavailable"}">
+        <span class="fl-name">${f.label}</span>
+        <span class="fl-weight">${Math.round(f.weight * 100)}%${f.dataAvailable ? "" : " · no data"}</span>
+      </div>
+    `).join("");
+  }
 }
 
 function setupModalTabs() {
@@ -4358,7 +4506,7 @@ function setupSourcesForm() {
         matchText: matchText,
         prediction: prediction,
         confidence: confidence,
-        timestamp: "Today, " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        timestamp: "Today, " + nowEatTime(),
         notes: notes
       };
 
@@ -4550,7 +4698,7 @@ function setupTicketSlipEvents() {
       const newTicket = {
         id: "tkt-" + Date.now(),
         name: "CALJAN Accumulator #" + (state.tickets.length + 1),
-        createdAt: "Today, " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        createdAt: "Today, " + nowEatTime(),
         legs: legs,
         combinedOdds: combinedOdds,
         stake: stake,
@@ -4730,7 +4878,7 @@ async function checkLiveResults(externalData = null) {
 
   if (feedData && Array.isArray(feedData)) {
     let updatedCount = 0;
-    const nowStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const nowStr = nowEatTime();
 
     feedData.forEach((item) => {
       const homeName = item.homeTeam || item.home_team || item.home || "";
@@ -4798,7 +4946,7 @@ async function checkLiveResults(externalData = null) {
       m.status = isWon ? "Won" : "Lost";
       m.result = h + "-" + a + " FT";
       m.liveMinute = "FT";
-      m.checkedAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      m.checkedAt = nowEatTime();
       settled++;
     });
 
@@ -4835,7 +4983,7 @@ function simulateLiveMatches() {
     m.status = "Live";
     m.result = scores[idx % scores.length];
     m.liveMinute = minutes[idx % minutes.length];
-    m.checkedAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    m.checkedAt = nowEatTime();
   });
 
   saveAllToStorage();
@@ -4874,7 +5022,7 @@ function simulateMatchFinalWhistle() {
     m.status = isWon ? "Won" : "Lost";
     m.result = sObj.score + " FT";
     m.liveMinute = "FT";
-    m.checkedAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    m.checkedAt = nowEatTime();
     if (isWon) wonCount++;
   });
 
@@ -4912,6 +5060,11 @@ function startCountdownTimer() {
       const mins = Math.floor(state.countdownSeconds / 60);
       const secs = state.countdownSeconds % 60;
       countdownEl.textContent = mins + ":" + (secs < 10 ? "0" : "") + secs;
+    }
+
+    // Refresh kickoff countdown badges on the games table roughly once a minute
+    if (state.countdownSeconds % 60 === 0) {
+      renderGamesTable();
     }
   }, 1000);
 }
@@ -5055,21 +5208,31 @@ function renderDashboardCharts() {
     });
   }
 
+  const decided = state.predictions.filter((p) => p.status === "Won" || p.status === "Lost");
+
   const trendCanvas = document.getElementById("trendChart");
   if (trendCanvas) {
     const ctx = trendCanvas.getContext("2d");
     if (state.charts.trend) state.charts.trend.destroy();
 
-    const dates = ["Sep 10", "Sep 11", "Sep 12", "Sep 13", "Sep 14", "Sep 15", "Sep 16"];
-    const trendData = [72, 80, 78, 83.3, 97.3, 85, 88];
+    const byDate = {};
+    decided.forEach((p) => {
+      if (!p.date) return;
+      if (!byDate[p.date]) byDate[p.date] = { won: 0, total: 0 };
+      byDate[p.date].total++;
+      if (p.status === "Won") byDate[p.date].won++;
+    });
+    const sortedDates = Object.keys(byDate).sort().slice(-14);
+    const dates = sortedDates.map((d) => new Date(d + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }));
+    const trendData = sortedDates.map((d) => Math.round((byDate[d].won / byDate[d].total) * 1000) / 10);
 
     state.charts.trend = new Chart(ctx, {
       type: "line",
       data: {
-        labels: dates,
+        labels: dates.length ? dates : ["No settled matches yet"],
         datasets: [{
           label: "CALJAN Hit Rate %",
-          data: trendData,
+          data: dates.length ? trendData : [0],
           borderColor: "#3b82f6",
           backgroundColor: "rgba(59, 130, 246, 0.1)",
           fill: true,
@@ -5082,7 +5245,80 @@ function renderDashboardCharts() {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { beginAtZero: false, min: 60, max: 100, ticks: { color: "#94a3b8" }, grid: { color: "rgba(255,255,255,0.05)" } },
+          y: { beginAtZero: true, max: 100, ticks: { color: "#94a3b8" }, grid: { color: "rgba(255,255,255,0.05)" } },
+          x: { ticks: { color: "#94a3b8" }, grid: { display: false } }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+
+  const marketCanvas = document.getElementById("marketChart");
+  if (marketCanvas) {
+    const ctx = marketCanvas.getContext("2d");
+    if (state.charts.market) state.charts.market.destroy();
+
+    const byMarket = {};
+    decided.forEach((p) => {
+      const key = p.predictionType || "Unknown";
+      if (!byMarket[key]) byMarket[key] = { won: 0, total: 0 };
+      byMarket[key].total++;
+      if (p.status === "Won") byMarket[key].won++;
+    });
+    const markets = Object.keys(byMarket);
+    const marketRates = markets.map((k) => Math.round((byMarket[k].won / byMarket[k].total) * 1000) / 10);
+
+    state.charts.market = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: markets.length ? markets : ["No settled matches yet"],
+        datasets: [{
+          label: "Hit Rate %",
+          data: markets.length ? marketRates : [0],
+          backgroundColor: "#f59e0b",
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { beginAtZero: true, max: 100, ticks: { color: "#94a3b8" }, grid: { color: "rgba(255,255,255,0.05)" } },
+          x: { ticks: { color: "#94a3b8" }, grid: { display: false } }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+
+  const confidenceCanvas = document.getElementById("confidenceChart");
+  if (confidenceCanvas) {
+    const ctx = confidenceCanvas.getContext("2d");
+    if (state.charts.confidence) state.charts.confidence.destroy();
+
+    const levels = ["High", "Medium", "Low"];
+    const confRates = levels.map((lvl) => {
+      const picks = decided.filter((p) => p.confidence === lvl);
+      if (picks.length === 0) return 0;
+      return Math.round((picks.filter((p) => p.status === "Won").length / picks.length) * 1000) / 10;
+    });
+
+    state.charts.confidence = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: levels,
+        datasets: [{
+          label: "Hit Rate %",
+          data: confRates,
+          backgroundColor: ["#10b981", "#3b82f6", "#94a3b8"],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { beginAtZero: true, max: 100, ticks: { color: "#94a3b8" }, grid: { color: "rgba(255,255,255,0.05)" } },
           x: { ticks: { color: "#94a3b8" }, grid: { display: false } }
         },
         plugins: { legend: { display: false } }
@@ -5380,6 +5616,40 @@ async function syncRealBetikaGames(parsedData = null) {
     let rawMatches = parsedData ? (parsedData.data || parsedData) : null;
 
     if (!rawMatches) {
+      // 0. Attempt fetch from Node.js Backend Server API (/api/sync)
+      try {
+        const backendRes = await fetch("/api/sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+        });
+        if (backendRes.ok) {
+          const backendData = await backendRes.json();
+          if (backendData && backendData.success) {
+            const matchesRes = await fetch("/api/matches");
+            if (matchesRes.ok) {
+              const matchesJson = await matchesRes.json();
+              if (matchesJson && matchesJson.data && matchesJson.data.length > 0) {
+                state.predictions = matchesJson.data;
+                saveAllToStorage();
+                renderDateTabs();
+                renderGamesTable();
+                updateDashboardKpis();
+                renderDashboardCharts();
+                showToast("Betika Sync Complete", `${matchesJson.data.length} matches synchronized via Node.js Backend.`, "success");
+                if (syncBtn) {
+                  syncBtn.disabled = false;
+                  syncBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i> <span>Sync Betika Matches</span>';
+                }
+                if (paneSyncBtn) paneSyncBtn.disabled = false;
+                return;
+              }
+            }
+          }
+        }
+      } catch (backendErr) {
+        console.warn("Backend /api/sync unavailable, falling back to direct/local:", backendErr);
+      }
+
       // 1. Attempt direct live fetch from Betika Public API endpoint
       try {
         const betikaApiUrl = "https://api.betika.com/v1/uo/matches?tab=today&sub_type_id=1,186&sport_id=14&tag_id=1&sort_id=1&period_id=-1&esports=false";
@@ -5548,7 +5818,7 @@ function predictBetikaRawMatch(m, index = 0) {
       initialStatus = "Live";
       initialResult = "3-2";
       initialMinute = "55'";
-      initialCheckedAt = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      initialCheckedAt = nowEatTime();
     } else if (elapsed >= 115) {
       // Match is finished (FT)
       const hScore = (index % 3 === 0) ? 2 : (index % 3 === 1) ? 1 : 3;
@@ -5557,7 +5827,7 @@ function predictBetikaRawMatch(m, index = 0) {
       initialStatus = isWon ? "Won" : "Lost";
       initialResult = hScore + "-" + aScore + " FT";
       initialMinute = "FT";
-      initialCheckedAt = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      initialCheckedAt = nowEatTime();
     } else if (elapsed > 0) {
       // Match is currently in-play Live
       const liveMin = Math.min(elapsed, 90) + "'";
@@ -5566,7 +5836,7 @@ function predictBetikaRawMatch(m, index = 0) {
       initialStatus = "Live";
       initialResult = hScore + "-" + aScore;
       initialMinute = liveMin;
-      initialCheckedAt = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      initialCheckedAt = nowEatTime();
     }
   }
 
@@ -5667,4 +5937,44 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast("Charts Updated", "Analytics metrics recomputed.", "info");
     });
   }
+
+  const refreshApiStatusBtn = document.getElementById("refreshApiStatusBtn");
+  if (refreshApiStatusBtn) {
+    refreshApiStatusBtn.addEventListener("click", () => {
+      renderApiStatusPanel();
+      showToast("API Status Refreshed", "Checked configuration for all 12 data sources.", "info");
+    });
+  }
+  renderApiStatusPanel();
+
+  // Check Node.js Backend Server Status & Sync Data
+  fetch("/api/status")
+    .then(r => r.json())
+    .then(statusData => {
+      if (statusData && statusData.success) {
+        console.log("CALJAN Node.js Backend connected:", statusData);
+        const headerPill = document.getElementById("headerConnectionPill");
+        const headerText = document.getElementById("headerConnectionText");
+        if (headerPill) headerPill.style.borderColor = "var(--primary)";
+        if (headerText) headerText.innerHTML = '<strong class="text-accent"><i class="fa-brands fa-node-js"></i> API: Node.js Online</strong>';
+
+        // Fetch matches from Node backend if available
+        fetch("/api/matches")
+          .then(r => r.json())
+          .then(res => {
+            if (res && res.data && res.data.length > 0) {
+              state.predictions = res.data;
+              saveAllToStorage();
+              renderDateTabs();
+              renderGamesTable();
+              updateDashboardKpis();
+              renderDashboardCharts();
+            }
+          })
+          .catch(() => {});
+      }
+    })
+    .catch(() => {
+      console.log("CALJAN running in client-only mode or backend initializing.");
+    });
 });

@@ -174,6 +174,7 @@
                 <option value="Live">Live In-Play</option>
                 <option value="Won">Won</option>
                 <option value="Lost">Lost</option>
+                <option value="Unverified">Unverified (no result data)</option>
               </select>
               <select id="filterLeague" class="form-select">
                 <option value="ALL">All Leagues</option>
@@ -597,10 +598,28 @@
               <canvas id="leagueChart" height="250"></canvas>
             </div>
           </div>
+          <div class="card chart-card">
+            <div class="card-header">
+              <i class="fa-solid fa-chart-bar"></i>
+              <h3>Hit Rate by Market Type</h3>
+            </div>
+            <div class="card-body">
+              <canvas id="marketChart" height="250"></canvas>
+            </div>
+          </div>
+          <div class="card chart-card">
+            <div class="card-header">
+              <i class="fa-solid fa-chart-bar"></i>
+              <h3>Hit Rate by Confidence Level</h3>
+            </div>
+            <div class="card-body">
+              <canvas id="confidenceChart" height="250"></canvas>
+            </div>
+          </div>
           <div class="card chart-card" style="grid-column: 1 / -1;">
             <div class="card-header">
               <i class="fa-solid fa-chart-line"></i>
-              <h3>Performance Trend (Last 30 Days)</h3>
+              <h3>Performance Trend</h3>
             </div>
             <div class="card-body">
               <canvas id="trendChart" height="150"></canvas>
@@ -644,6 +663,24 @@
           <div class="title-group">
             <h2><i class="fa-solid fa-sliders"></i> API Configuration &amp; Data Management</h2>
             <p class="subtitle">Connect to live score APIs, manage CALJAN data, and configure auto-checking</p>
+          </div>
+          <div class="pane-actions">
+            <button id="refreshApiStatusBtn" class="btn btn-outline btn-sm">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Refresh Status</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 16px;">
+          <div class="card-header">
+            <i class="fa-solid fa-server"></i>
+            <h3>CALJAN Backend — 12 Data Source Status</h3>
+          </div>
+          <div class="card-body">
+            <div class="api-status-grid" id="apiStatusGrid">
+              <p class="text-muted">Loading API status...</p>
+            </div>
           </div>
         </div>
 
@@ -860,6 +897,7 @@
           <button class="modal-tab" data-modaltab="tab-travel">Travel &amp; Pitch</button>
           <button class="modal-tab" data-modaltab="tab-sentiment">Social Sentiment (X/Reddit)</button>
           <button class="modal-tab" data-modaltab="tab-analysts">All Analyst Picks</button>
+          <button class="modal-tab" data-modaltab="tab-factors">11-Factor Breakdown</button>
         </div>
 
         <div class="modal-body">
@@ -881,6 +919,12 @@
           </div>
           <div id="tab-analysts" class="modal-pane">
             <div class="analyst-breakdown-list" id="analystBreakdownList"></div>
+          </div>
+          <div id="tab-factors" class="modal-pane">
+            <div class="factors-radar-wrap">
+              <canvas id="factorsRadarChart" height="280"></canvas>
+            </div>
+            <div class="factors-legend" id="factorsLegend"></div>
           </div>
         </div>
 
