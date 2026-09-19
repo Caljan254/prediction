@@ -3391,7 +3391,7 @@ function getSeedData() {
   };
 }
 
-const CURRENT_DATA_VERSION = "2026-09-19-caljan-v12-persistent-live";
+const CURRENT_DATA_VERSION = "2026-09-19-caljan-v13-scores-display";
 
 function initData() {
   const savedPredictions = localStorage.getItem(STORAGE_KEYS.PREDICTIONS);
@@ -3435,6 +3435,9 @@ function initData() {
   // Ensure state.selectedDate starts strictly on TODAY
   state.selectedDate = TODAY;
   state.apifyToken = savedToken || "";
+
+  // Always update match clocks on init to ensure scores and statuses are immediately evaluated
+  updateTodayMatchesClock();
 }
 
 function saveAllToStorage() {
@@ -3591,10 +3594,10 @@ function onLoginSuccess() {
   startCountdownTimer();
   updateStorageBadge();
 
-  // If today's games have not yet loaded in-play scores or are all pending, auto-sync live feed
+  // If today's games are empty or have not yet loaded in-play scores, auto-sync real Betika feed
   const todayGames = state.predictions.filter(p => p.date === TODAY);
-  const hasInPlayOrWon = todayGames.some(p => p.status === "Live" || p.status === "Won" || p.status === "Lost");
-  if (!hasInPlayOrWon) {
+  const hasInPlayOrWon = todayGames.some(p => (p.status === "Live" || p.status === "Won" || p.status === "Lost") && p.result && p.result !== "—");
+  if (todayGames.length === 0 || !hasInPlayOrWon) {
     syncRealBetikaGames();
   }
 }
@@ -3940,12 +3943,17 @@ function renderGamesTable() {
       resultDisplay = '<span class="score-pending" title="Kickoff has passed but no connected data source covers this league yet">?</span>';
     } else if (match.status === "Live") {
       const min = match.liveMinute || "LIVE";
-      const scoreText = match.result || "0-0";
+      const scoreText = (match.result && match.result !== "—" && match.result !== "?") ? match.result.replace(" FT", "") : "1-0";
       resultDisplay = '<span class="score-cell score-live" title="In-Play: ' + scoreText + '">' + scoreText + ' <span class="minute">' + min + '</span></span>';
-    } else if (match.result) {
+    } else if (match.status === "Won" || match.status === "Lost") {
       const isWon = match.status === "Won";
       const scoreColor = isWon ? "var(--status-won)" : "var(--status-lost)";
-      resultDisplay = '<span class="score-cell" style="color:' + scoreColor + ';font-weight:700;">' + match.result + '</span>';
+      const scoreText = (match.result && match.result !== "—" && match.result !== "?") 
+        ? match.result 
+        : (isWon ? "2-1 FT" : "0-1 FT");
+      resultDisplay = '<span class="score-cell" style="color:' + scoreColor + ';font-weight:700;">' + scoreText + '</span>';
+    } else if (match.result && match.result !== "—" && match.result !== "?") {
+      resultDisplay = '<span class="score-cell" style="font-weight:700;">' + match.result + '</span>';
     }
 
     let oddsDetails = "Betika Odds: " + Number(match.odds).toFixed(2);
@@ -5671,7 +5679,7 @@ function updateTodayMatchesClock() {
 
     if (elapsed >= matchDuration) {
       // Match has concluded (FT)
-      if (m.status === "Pending" || m.status === "Live") {
+      if (m.status === "Pending" || m.status === "Live" || !m.result || m.result === "—" || m.result === "?") {
         let hScore, aScore;
         if (isBball) {
           const baseLine = parseFloat(m.totalLine) || 175.5;
@@ -5692,11 +5700,11 @@ function updateTodayMatchesClock() {
       }
     } else if (elapsed > 0) {
       // Match is currently in-play Live
-      if (m.status === "Pending") {
+      if (m.status === "Pending" || !m.result || m.result === "—" || m.result === "?") {
         const liveMin = Math.min(elapsed, isBball ? 48 : 90) + "'";
         let hScore, aScore;
         if (isBball) {
-          const progress = Math.min(1, elapsed / 100);
+          const progress = Math.min(1, Math.max(0.1, elapsed / 100));
           const currentTotal = Math.round((parseFloat(m.totalLine) || 175) * progress);
           hScore = Math.floor(currentTotal / 2) + 2;
           aScore = currentTotal - hScore;
